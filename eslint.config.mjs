@@ -20,6 +20,11 @@ const eslintConfig = [
       "next-env.d.ts",
     ],
   },
+  {
+    rules: {
+      "max-len": "off"
+    }
+  }
 ];
 
 export default eslintConfig;

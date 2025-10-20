@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(/Users/sumin/Pictures/Photos Library.photoslibrary/originals/D/**)",
+      "Bash(npm install:*)",
+      "Bash(npm uninstall:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
