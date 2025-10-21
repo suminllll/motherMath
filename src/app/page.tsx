@@ -20,7 +20,7 @@ export default function Home() {
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
-        const data = await getAnnouncements(5);
+        const data = await getAnnouncements(3);
         setAnnouncements(data);
       } catch (error) {
         console.error('Error fetching announcements:', error);
