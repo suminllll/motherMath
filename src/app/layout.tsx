@@ -28,9 +28,11 @@ export default function RootLayout({
     <html lang="ko">
       <head>
         <meta name="naver-site-verification" content="155b524d12872dafac2fa07ac592e235e8d31fde" />
+        <meta name="google-site-verification" content="2EkPcqyXjjwzVZ-KjsesgSCnGcmOyDas-41d6ipy5FE" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+        suppressHydrationWarning
       >
         <Header />
         <main className="">
