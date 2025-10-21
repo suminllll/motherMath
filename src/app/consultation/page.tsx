@@ -1,153 +1,70 @@
 'use client';
 
-import { useState } from 'react';
-
 export default function Consultation() {
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    grade: '',
-    subject: '',
-    message: '',
-  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    alert('상담 신청이 완료되었습니다. 빠른 시일 내에 연락드리겠습니다.');
-    setFormData({ name: '', phone: '', grade: '', subject: '', message: '' });
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-2xl mx-auto px-4">
-        <div className="bg-white rounded-lg shadow-md p-8">
-          <h1 className="text-4xl font-bold text-center text-gray-900 mb-2">
-            상담 예약
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 pt-35 pb-10 md:py-50">
+      <div className="max-w-2xl w-full">
+        {/* 상단 타이틀 */}
+        <div className="text-center mb-8">
+      
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-20">
+            상담예약
           </h1>
-          <p className="text-center text-gray-600 mb-8">
-            무료 상담을 통해 최적의 학습 방법을 찾아보세요
-          </p>
+         
+        </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                학생 이름 *
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                required
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full text-black px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="학생 이름을 입력하세요"
-              />
+        {/* 카카오톡 카드 */}
+        <div className="bg-[#FAE100] rounded-3xl p-8 md:p-12 shadow-2xl text-center">
+          {/* 카카오톡 로고 */}
+          <div className="flex flex-col items-center mb-8">
+      
+            <div className="text-4xl  text-gray-900">
+              <span className="text-gray-900">Kakao</span>
+              <span className="font-bold">Talk</span>
             </div>
-
-            <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                연락처 *
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                required
-                value={formData.phone}
-                onChange={handleChange}
-                className="w-full text-black px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="010-1234-5678"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="grade" className="block text-sm font-medium text-gray-700 mb-2">
-                학년 *
-              </label>
-              <select
-                id="grade"
-                name="grade"
-                required
-                value={formData.grade}
-                onChange={handleChange}
-                className="w-full text-black px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="">학년을 선택하세요</option>
-                <option value="초등3">초등학교 3학년</option>
-                <option value="초등4">초등학교 4학년</option>
-                <option value="초등5">초등학교 5학년</option>
-                <option value="초등6">초등학교 6학년</option>
-                <option value="중1">중학교 1학년</option>
-                <option value="중2">중학교 2학년</option>
-                <option value="중3">중학교 3학년</option>
-                <option value="고1">고등학교 1학년</option>
-                <option value="고2">고등학교 2학년</option>
-                <option value="고3">고등학교 3학년</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-                관심 분야
-              </label>
-              <select
-                id="subject"
-                name="subject"
-                value={formData.subject}
-                onChange={handleChange}
-                className="w-full text-black px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="">선택하세요</option>
-                <option value="기초수학">기초 수학</option>
-                <option value="내신수학">내신 수학</option>
-                <option value="수능수학">수능 수학</option>
-                <option value="심화수학">심화 수학</option>
-                <option value="경시수학">경시 수학</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                상담 내용
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                rows={4}
-                value={formData.message}
-                onChange={handleChange}
-                className="w-full text-black px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="궁금한 점이나 상담받고 싶은 내용을 자유롭게 작성해주세요"
-              ></textarea>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white py-3 px-4 rounded-md font-semibold hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            >
-              상담 신청하기
-            </button>
-          </form>
-
-          <div className="mt-8 p-4 bg-blue-50 rounded-lg">
-            <h3 className="text-lg font-semibold text-blue-900 mb-2">
-              상담 안내
-            </h3>
-            <ul className="text-blue-800 text-sm space-y-1">
-              <li>• 상담 신청 후 24시간 내에 연락드립니다.</li>
-              <li>• 무료 상담은 약 30분 정도 소요됩니다.</li>
-              <li>• 학생의 현재 수준 진단 및 학습 계획을 제안해드립니다.</li>
-              <li>• 상담은 방문 또는 전화로 진행 가능합니다.</li>
-            </ul>
           </div>
+
+          {/* 채팅 상담 버튼 */}
+         <a href="http://pf.kakao.com/_qaxnen" target="_blank" rel="noopener noreferrer" className="hidden md:block bg-[#3C3035] rounded-full text-[#FAE100] px-10 py-5 mb-5 text-2xl">
+            카카오톡채널 채팅상담/문의하기
+          </a>
+            <a href="http://pf.kakao.com/_qaxnen" target="_blank" rel="noopener noreferrer" className="block md:hidden bg-[#3C3035] rounded-full text-[#FAE100] px-10 py-5 mb-5 text-2xl">
+            카카오톡채널 <br/>채팅상담/문의하기
+          </a>
+
+          {/* 상담 시간 */}
+          <div className="text-center my-8">
+            <p className="text-gray-900 font-bold text-lg">
+              상담시간 : 평일 14시~22시
+            </p>
+          </div>
+
+        </div>
+
+        {/* 하단 안내 */}
+        <div className="mt-8 p-6 bg-white rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">
+            카카오톡 상담 안내
+          </h3>
+          <ul className="text-gray-700 text-sm space-y-2">
+            <li>• 카카오톡 채널을 통해 실시간으로 상담받으실 수 있습니다.</li>
+            <li>• 상담 시간 내에 문의하시면 빠르게 답변드립니다.</li>
+            <li>• 상담 시간 외 문의는 익일 순차적으로 답변드립니다.</li>
+          </ul>
+        </div>
+
+        {/* 전화 상담 */}
+        <div className="mt-6 p-6 bg-blue-50 rounded-lg border border-blue-200">
+          <h3 className="text-lg font-semibold text-blue-900 mb-2">
+            전화 상담
+          </h3>
+          <a href="tel:+0236620747" className="text-blue-800 text-lg font-bold">  📞 02-3662-0747</a>
+
+          <p className="text-blue-700 text-sm mt-2">
+            전화 상담도 가능합니다. (평일 14:00 ~ 22:00)
+          </p>
         </div>
       </div>
     </div>

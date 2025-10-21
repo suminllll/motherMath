@@ -151,13 +151,13 @@ export default function AdminMaterials() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-38">
+    <div className="min-h-screen bg-gray-50 pt-35 pb-20 md:py-38">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">교육칼럼 관리</h1>
           <button
             onClick={openAddModal}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors cursor-pointer"
           >
             새 자료 추가
           </button>
@@ -202,7 +202,7 @@ export default function AdminMaterials() {
                         <td className="px-6 py-4 whitespace-nowrap text-black text-[14px]">
                           <button
                             onClick={() => toggleExpanded(material.id)}
-                            className="hover:text-slate-800 transition-colors text-left"
+                            className="hover:text-slate-800 transition-colors text-left cursor-pointer"
                           >
                             {material.title}
                           </button>
@@ -216,13 +216,13 @@ export default function AdminMaterials() {
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <button
                             onClick={() => handleEdit(material)}
-                            className="text-blue-600 hover:text-blue-900 mr-3"
+                            className="text-blue-600 hover:text-blue-900 mr-3 cursor-pointer"
                           >
                             수정
                           </button>
                           <button
                             onClick={() => handleDelete(material.id)}
-                            className="text-red-600 hover:text-red-900"
+                            className="text-red-600 hover:text-red-900 cursor-pointer"
                           >
                             삭제
                           </button>
@@ -264,16 +264,16 @@ export default function AdminMaterials() {
                 <button
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   이전
                 </button>
-                
+
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                   <button
                     key={page}
                     onClick={() => handlePageChange(page)}
-                    className={`px-3 py-2 text-sm font-medium rounded-md ${
+                    className={`px-3 py-2 text-sm font-medium rounded-md cursor-pointer ${
                       currentPage === page
                         ? 'text-white bg-blue-600 border border-blue-600'
                         : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50'
@@ -282,11 +282,11 @@ export default function AdminMaterials() {
                     {page}
                   </button>
                 ))}
-                
+
                 <button
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   다음
                 </button>
@@ -299,7 +299,7 @@ export default function AdminMaterials() {
 
         {isModalOpen && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-            <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white w-[70%]">
+            <div className="relative top-20 mx-auto p-5 border shadow-lg rounded-md bg-white w-[70%]">
               <h3 className="text-lg font-medium text-gray-900 mb-4">
                 {editingMaterial ? '자료 수정' : '새 자료 추가'}
               </h3>
@@ -326,21 +326,21 @@ export default function AdminMaterials() {
                       <button
                         type="button"
                         onClick={() => document.execCommand('bold')}
-                        className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 font-bold"
+                        className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 font-bold cursor-pointer"
                       >
                         B
                       </button>
                       <button
                         type="button"
                         onClick={() => document.execCommand('italic')}
-                        className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 italic"
+                        className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 italic cursor-pointer"
                       >
                         I
                       </button>
                       <button
                         type="button"
                         onClick={() => document.execCommand('underline')}
-                        className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 underline"
+                        className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 underline cursor-pointer"
                       >
                         U
                       </button>
@@ -348,14 +348,14 @@ export default function AdminMaterials() {
                       <button
                         type="button"
                         onClick={() => document.execCommand('insertOrderedList')}
-                        className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100"
+                        className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 cursor-pointer"
                       >
                         1.
                       </button>
                       <button
                         type="button"
                         onClick={() => document.execCommand('insertUnorderedList')}
-                        className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100"
+                        className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 cursor-pointer"
                       >
                         •
                       </button>
@@ -393,13 +393,13 @@ export default function AdminMaterials() {
                   <button
                     type="button"
                     onClick={closeModal}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200"
+                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 cursor-pointer"
                   >
                     취소
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700"
+                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 cursor-pointer"
                   >
                     {editingMaterial ? '수정' : '추가'}
                   </button>

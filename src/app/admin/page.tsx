@@ -79,7 +79,7 @@ export default function AdminDashboard() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:bg-gray-400"
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:bg-gray-400 cursor-pointer"
             >
               {isLoading ? '로그인 중...' : '로그인'}
             </button>
@@ -93,9 +93,9 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-38">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">관리자 대시보드</h1>
           <div className="flex items-center gap-4">
             <span className="text-gray-600">
@@ -103,7 +103,7 @@ export default function AdminDashboard() {
             </span>
             <button
               onClick={handleLogout}
-              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
+              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors cursor-pointer"
             >
               로그아웃
             </button>
@@ -182,28 +182,6 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <div className="mt-8 bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            최근 활동
-          </h2>
-          <div className="space-y-3">
-            <div className="flex items-center p-3 bg-gray-50 rounded-md">
-              <span className="text-sm text-gray-600">
-                2024-01-25 14:30 - 새로운 자료 &quot;고1 이차함수 기출문제&quot;가 업로드되었습니다.
-              </span>
-            </div>
-            <div className="flex items-center p-3 bg-gray-50 rounded-md">
-              <span className="text-sm text-gray-600">
-                2024-01-24 16:15 - 강의 영상 &quot;중2 일차함수의 그래프&quot;가 추가되었습니다.
-              </span>
-            </div>
-            <div className="flex items-center p-3 bg-gray-50 rounded-md">
-              <span className="text-sm text-gray-600">
-                2024-01-23 09:45 - 새로운 상담 신청이 접수되었습니다.
-              </span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

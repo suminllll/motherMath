@@ -15,7 +15,6 @@ export const getMaterials = async (): Promise<Material[]> => {
   return data || []
 }
 
-// getMaterialsByCategory 함수 제거됨 - category 컬럼이 삭제되었음
 
 export const searchMaterials = async (searchTerm: string, searchType: 'title' | 'content' = 'title'): Promise<Material[]> => {
   let query = supabase
@@ -97,5 +96,3 @@ export const getAnnouncements = async (limit = 5): Promise<Material[]> => {
 
   return data || []
 }
-
-// incrementDownloadCount 함수 제거됨 - download_count 컬럼이 삭제되었음

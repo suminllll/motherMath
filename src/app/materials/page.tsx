@@ -93,21 +93,22 @@ function MaterialsContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-50">
+    <div className="min-h-screen bg-gray-50 pt-35 pb-20 md:py-50">
       <div className="max-w-6xl mx-auto px-4">
-        <h1 className="text-4xl font-bold text-center text-gray-900 mb-18">
+        
+        <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-10 md:mb-18">
           교육 칼럼
         </h1>
        
 
         <div className="flex justify-end mb-5">
-            <div className="flex items-center border border-gray-300 rounded-md overflow-hidden w-80">
+            <div className="flex items-center border border-gray-300 rounded-md overflow-hidden w-full md:w-80">
               <select
                 value={searchType}
                 onChange={(e) => setSearchType(e.target.value)}
                 className="px-3 py-2 border-none outline-none  text-gray-700 cursor-pointer text-sm"
               >
-                <option value="title">제목</option>
+                <option value="title" >제목</option>
                 <option value="content">내용</option>
               </select>
               <input
@@ -117,7 +118,7 @@ function MaterialsContent() {
                 className="flex-1 text-black px-3 py-2 border-none outline-none placeholder-gray-500 text-sm"
                 placeholder="검색어를 입력하세요"
               />
-              <button className="px-3 py-2 bg-gray-100 hover:bg-gray-200 transition-colors">
+              <button className="px-3 py-2 bg-gray-100 hover:bg-gray-200 transition-colors cursor-pointer">
                 <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
@@ -138,7 +139,7 @@ function MaterialsContent() {
                     <th className="px-6 py-3 text-left  tracking-wider w-16">
                       No
                     </th>
-                    <th className="px-6 py-3 text-center tracking-wider">
+                    <th className="px-6 py-3 text-center tracking-wider ">
                       제목
                     </th>
                     <th className="px-6 py-3 text-left  tracking-wider w-32">
@@ -161,7 +162,7 @@ function MaterialsContent() {
                           <td className="px-6 py-4 whitespace-nowrap text-black text-[14px]">
                             <button
                               onClick={() => toggleExpanded(material.id)}
-                              className="hover:text-slate-800 transition-colors"
+                              className="hover:text-slate-800 transition-colors cursor-pointer"
                             >
                               {material.title}
                             </button>
@@ -176,7 +177,7 @@ function MaterialsContent() {
                         {isExpanded && (
                           <tr>
                             <td colSpan={4} className="py-4 bg-gray-50">
-                              <div className="pl-[calc(4rem+1.5rem)] pr-6">
+                              <div className="px-5 md:pl-[calc(4rem+1.5rem)] md:pr-6">
                                 {material.contents && (
                                   <div className="max-h-[70vh] overflow-y-auto">
                                     <div 
@@ -213,16 +214,16 @@ function MaterialsContent() {
                   <button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   >
                     이전
                   </button>
-                  
+
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                     <button
                       key={page}
                       onClick={() => handlePageChange(page)}
-                      className={`px-3 py-2 text-sm font-medium rounded-md ${
+                      className={`px-3 py-2 text-sm font-medium rounded-md cursor-pointer ${
                         currentPage === page
                           ? 'text-white bg-blue-600 border border-blue-600'
                           : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50'
@@ -231,11 +232,11 @@ function MaterialsContent() {
                       {page}
                     </button>
                   ))}
-                  
+
                   <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   >
                     다음
                   </button>

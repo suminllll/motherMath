@@ -19,42 +19,11 @@ export const getLecturesByGrade = async (grade: string): Promise<Lecture[]> => {
   const { data, error } = await supabase
     .from('lectures')
     .select('*')
-    .eq('grade', grade)
+    .contains('grade', [grade])  // 배열에 해당 값이 포함되어 있는지 확인
     .order('created_at', { ascending: false })
 
   if (error) {
     console.error('Error fetching lectures by grade:', error)
-    throw error
-  }
-
-  return data || []
-}
-
-export const getLecturesBySubject = async (subject: string): Promise<Lecture[]> => {
-  const { data, error } = await supabase
-    .from('lectures')
-    .select('*')
-    .eq('subject', subject)
-    .order('created_at', { ascending: false })
-
-  if (error) {
-    console.error('Error fetching lectures by subject:', error)
-    throw error
-  }
-
-  return data || []
-}
-
-export const getLecturesByGradeAndSubject = async (grade: string, subject: string): Promise<Lecture[]> => {
-  const { data, error } = await supabase
-    .from('lectures')
-    .select('*')
-    .eq('grade', grade)
-    .eq('subject', subject)
-    .order('created_at', { ascending: false })
-
-  if (error) {
-    console.error('Error fetching lectures by grade and subject:', error)
     throw error
   }
 
@@ -101,26 +70,5 @@ export const deleteLecture = async (id: string): Promise<void> => {
   if (error) {
     console.error('Error deleting lecture:', error)
     throw error
-  }
-}
-
-export const incrementViewCount = async (id: string): Promise<void> => {
-  const { error } = await supabase
-    .rpc('increment', { table_name: 'lectures', row_id: id, column_name: 'view_count' })
-
-  if (error) {
-    // Fallback: manual increment
-    const { data: lecture } = await supabase
-      .from('lectures')
-      .select('view_count')
-      .eq('id', id)
-      .single()
-
-    if (lecture) {
-      await supabase
-        .from('lectures')
-        .update({ view_count: (lecture.view_count || 0) + 1 })
-        .eq('id', id)
-    }
   }
 }

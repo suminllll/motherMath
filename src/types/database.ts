@@ -27,33 +27,24 @@ export interface Database {
           title: string
           description: string | null
           youtube_url: string
-          grade: string
-          subject: string
-          view_count: number
+          grade: string[]
           created_at: string
-          updated_at: string
         }
         Insert: {
           id?: string
           title: string
           description?: string | null
           youtube_url: string
-          grade: string
-          subject: string
-          view_count?: number
+          grade: string[]
           created_at?: string
-          updated_at?: string
         }
         Update: {
           id?: string
           title?: string
           description?: string | null
           youtube_url?: string
-          grade?: string
-          subject?: string
-          view_count?: number
+          grade?: string[]
           created_at?: string
-          updated_at?: string
         }
       }
     }
