@@ -124,7 +124,7 @@ export default function About() {
                   { src: '/images/about/inside6.jpeg', alt: '마더수학 내부 시설 6' },
                   { src: '/images/about/inside7.jpeg', alt: '마더수학 내부 시설 7' }
                 ].map((image, index) => (
-                  <FadeUp key={index} delay={index * 0.1}>
+                  <FadeUp key={index} delay={index * 0.05}>
                     <div className="overflow-hidden rounded-lg shadow-md">
                       <Image
                         src={image.src}

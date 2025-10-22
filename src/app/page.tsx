@@ -133,10 +133,10 @@ export default function Home() {
             />
 
             {/* Dark Overlay */}
-            <div className="absolute inset-0 bg-black bg-opacity-50 z-10"></div>
+            <div className="absolute inset-0 bg-[#5d5a5a99] z-10"></div>
 
             {/* Text Content */}
-            <div className="absolute inset-0 z-20 flex flex-col justify-center space-y-4 px-[10%]">
+            <div className="absolute inset-0 z-20 flex flex-col justify-end pb-[19%] space-y-4 px-[10%]">
                 <h1 className="text-2xl font-bold leading-tight text-white">
                   수학의 실력을 넘어,<br />
                   사고력을 키우는 곳
@@ -154,10 +154,10 @@ export default function Home() {
 
       {/* Service Cards Section */}
       <section className="w-full bg-white pb-20 md:pb-60 px-8 md:px-4 relative z-10 ">
-          <div className="flex flex-col md:flex-row md:justify-evenly gap-10 md:gap-[4%] lg:gap-[8%] lg:max-w-7xl mx-auto  max-sm:pt-20">
+          <div className="flex flex-col md:flex-row md:justify-evenly gap-10 items-center md:gap-[4%] lg:gap-[8%] lg:max-w-7xl mx-auto  max-sm:pt-20">
             {/* Card 1 */}
-            <FadeUp delay={0} immediate>
-              <div className="bg-[#026674] md:mt-[-50px] h-[350px] text-white md:w-[300px] lg:w-[350px] rounded-lg flex flex-col items-center justify-center space-y-4 shadow-lg">
+            <FadeUp delay={0}>
+              <div className="bg-[#026674] md:mt-[-50px] h-[300px] md:h-[350px]  text-white w-[300px] lg:w-[350px] rounded-lg flex flex-col items-center justify-center space-y-4 shadow-lg">
                  <SlCalender size={50}/>
                   <h3 className="text-xl font-bold">첫 방문 상담예약</h3>
 
@@ -171,22 +171,22 @@ export default function Home() {
             </FadeUp>
 
             {/* Card 2 */}
-            <FadeUp delay={0.1} immediate>
-              <div className="bg-[#026674] md:mt-[-50px] h-[350px] text-white md:w-[300px] lg:w-[350px] rounded-lg flex flex-col items-center justify-center space-y-4 shadow-lg">
+            <FadeUp delay={0.1}>
+              <div className="bg-[#026674] md:mt-[-50px] h-[300px] md:h-[350px]  text-white  w-[300px] lg:w-[350px] rounded-lg flex flex-col items-center justify-center space-y-4 shadow-lg">
                  <LuTvMinimalPlay size={50}/>
                   <h3 className="text-xl font-bold">마더수학 원장 직강!</h3>
                   <p className="text-l opacity-90">
                     수업영상, 개념정리 영상 주기적 업로드
                   </p>
-                  <Link href="/about" className="mt-[45px] block bg-[#E8D7A2] text-black py-2 px-6 rounded-md text-[16px]">
+                  <Link href="/lectures" className="mt-[45px] block bg-[#E8D7A2] text-black py-2 px-6 rounded-md text-[16px]">
                     강의 보기
                   </Link>
               </div>
             </FadeUp>
 
             {/* Card 3 */}
-            <FadeUp delay={0.2} immediate>
-              <div className="bg-[#026674] md:mt-[-50px] h-[350px] text-white md:w-[300px] lg:w-[350px] rounded-lg flex flex-col items-center justify-center space-y-4 shadow-lg">
+            <FadeUp delay={0.2}>
+              <div className="bg-[#026674] md:mt-[-50px] h-[300px] md:h-[350px] text-white w-[300px] lg:w-[350px] rounded-lg flex flex-col items-center justify-center space-y-4 shadow-lg">
                  <BsGraphUpArrow size={50}/>
                   <h3 className="text-xl font-bold">원생들 성적 향상 시례</h3>
                   <p className="text-l opacity-90 text-center">
