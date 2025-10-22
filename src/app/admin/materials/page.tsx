@@ -336,12 +336,12 @@ export default function AdminMaterials() {
         )}
 
         {isModalOpen && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-            <div className="relative top-20 mx-auto p-5 border shadow-lg rounded-md bg-white w-[70%]">
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-start justify-center py-10">
+            <div className="relative mx-auto p-5 border shadow-lg rounded-md bg-white w-[90%] md:w-[70%] max-h-[90vh] overflow-y-auto">
               <h3 className="text-lg font-medium text-gray-900 mb-4">
                 {editingMaterial ? '자료 수정' : '새 자료 추가'}
               </h3>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4 ">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     제목
@@ -354,7 +354,7 @@ export default function AdminMaterials() {
                     required
                   />
                 </div>
-                <div>
+                <div className='h-[550px]'>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     내용
                   </label>
@@ -365,7 +365,7 @@ export default function AdminMaterials() {
                     modules={modules}
                     formats={formats}
                     className="bg-white"
-                    style={{ height: '400px', marginBottom: '50px' }}
+                    style={{ height: '450px', marginBottom: '50px' }}
                   />
                 </div>
                 <div className="flex justify-end space-x-3 pt-4">

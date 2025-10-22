@@ -139,7 +139,7 @@ export default function Lectures() {
               {currentLectures.map((lecture) => {
                 return (
                   <div key={lecture.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div className="aspect-video">
+                    <div className="aspect-video bg-gray-200">
                       <iframe
                         width="100%"
                         height="100%"
@@ -148,6 +148,7 @@ export default function Lectures() {
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
+                        loading="lazy"
                         className="w-full h-full"
                       ></iframe>
                     </div>
