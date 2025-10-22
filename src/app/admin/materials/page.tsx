@@ -111,7 +111,7 @@ export default function AdminMaterials() {
       setExpandedItem(materialId);
     }
   };
-// eslint-disable-next-line prefer-const
+
   // 이미지 크기 조절을 위한 HTML 처리 함수
   const processHtmlContent = (html: string) => {
     // img 태그의 width와 height 속성 제거하고 style 속성 수정

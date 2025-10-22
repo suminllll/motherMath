@@ -123,26 +123,28 @@ export default function Home() {
             </div>
         </div>
 
-          <div className=" md:hidden flex flex-col items-center h-full">
-            {/* Right Content - Student Image Placeholder */}
-            <div className="h-full w-full relative">
-                <Image 
-                  src="/images/heroSection.png" 
-                  alt="heroSectionImage" 
-                  fill
-                  className="object-cover"
-                />
-            </div>
-            {/* Left Content */}
-            <div className=" space-y-4 pl-[10%]">
-                <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold leading-tight">
+          <div className="md:hidden relative w-full h-full">
+            {/* Background Image */}
+            <Image
+              src="/images/heroSection.png"
+              alt="heroSectionImage"
+              fill
+              className="object-cover"
+            />
+
+            {/* Dark Overlay */}
+            <div className="absolute inset-0 bg-black bg-opacity-50 z-10"></div>
+
+            {/* Text Content */}
+            <div className="absolute inset-0 z-20 flex flex-col justify-center space-y-4 px-[10%]">
+                <h1 className="text-2xl font-bold leading-tight text-white">
                   수학의 실력을 넘어,<br />
                   사고력을 키우는 곳
                 </h1>
-                <h2 className="text-54l md:text-5xl lg:text-7xl font-bold text-white">
+                <h2 className="text-5xl font-bold text-white">
                   마더수학
                 </h2>
-                <p className="text-xl text-gray-300">
+                <p className="text-lg text-gray-300">
                   서울 강서구 초 · 중 · 고 전문 수학학원
                 </p>
             </div>
@@ -264,8 +266,8 @@ export default function Home() {
       {/* Announcements & Reviews Section */}
       <section className="flex justify-center bg-white pt-30 pb-40 px-[5%] lg:px-[10%] mx-auto  w-full">
             {/* Announcements */}
-           <div className="flex flex-col gap-10 lg:flex-row lg:justify-between overflow-x-hidden w-full lg:w-[1280px]">
-            <FadeUp>
+           <div className="flex flex-col gap-10 lg:flex-row lg:gap-10 overflow-x-hidden w-full lg:w-[1280px]">
+            <FadeUp className="w-full lg:w-1/2">
               <div className="w-full mx-auto">
                 <h2 className="text-2xl font-bold text-gray-900 mb-10">교육칼럼</h2>
                 <div className="space-y-4">
