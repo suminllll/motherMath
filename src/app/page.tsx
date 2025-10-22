@@ -267,7 +267,7 @@ export default function Home() {
       <section className="flex justify-center bg-white pt-30 pb-40 px-[5%] lg:px-[10%] mx-auto  w-full">
             {/* Announcements */}
            <div className="flex flex-col gap-10 lg:flex-row lg:gap-10 overflow-x-hidden w-full lg:w-[1280px]">
-            <FadeUp className="w-full lg:w-1/2">
+            <FadeUp className="w-full lg:w-1/2 mb-5 lg:mb-0">
               <div className="w-full mx-auto">
                 <h2 className="text-2xl font-bold text-gray-900 mb-10">교육칼럼</h2>
                 <div className="space-y-4">
