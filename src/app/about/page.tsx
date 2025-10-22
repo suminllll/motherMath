@@ -8,38 +8,12 @@ export default function About() {
   useEffect(() => {
     // 페이지 로드 시 스크롤을 최상단으로 이동
     window.scrollTo(0, 0);
-
-    // 카카오맵 스크립트 로드
-    const script = document.createElement('script');
-    script.src = 'https://ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js';
-    script.charset = 'UTF-8';
-    script.async = true;
-    script.onload = () => {
-      // @ts-expect-error - Kakao Map API
-      if (window.daum && window.daum.roughmap) {
-        // @ts-expect-error - Kakao Map API
-        new window.daum.roughmap.Lander({
-          timestamp: '1761109620106',
-          key: 'b99txgs5urk',
-          mapWidth: '640',
-          mapHeight: '360'
-        }).render();
-      }
-    };
-    document.body.appendChild(script);
-
-    return () => {
-      // 클린업
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
-      }
-    };
   }, []);
 
   return (
     <div className="min-h-screen">
       {/* Hero Section with Background Image */}
-      <div className="relative h-96 mb-20">
+      <div className="mt-10 relative h-50 md:h-96 mb-20">
         <Image
           src="/images/about/lectureRoom.png"
           alt="마더수학 강의실"
@@ -201,11 +175,16 @@ export default function About() {
               </FadeUp>
               <FadeUp delay={0.2}>
                 <div className="bg-gray-100 px-1 md:p-8 rounded-lg max-sm:pt-1 mb-10 pb-10">
-                    <div className="w-full rounded-lg overflow-hidden mb-20">
-                  {/* 카카오맵 - 지도퍼가기 */}
-                  <div
-                    id="daumRoughmapContainer1761109620106"
-                    className="root_daum_roughmap root_daum_roughmap_landing"
+                    <div className="w-full h-64 md:h-130 rounded-lg overflow-hidden mb-20">
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3163.011010650992!2d126.8380093126765!3d37.55480437192497!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357c9c6965ecacc7%3A0x94858cc6cd46e128!2z7ISc7Jq47Yq567OE7IucIOqwleyEnOq1rCDqsJXshJzroZw1MOq4uCA3Mg!5e0!3m2!1sko!2skr!4v1761111855213!5m2!1sko!2skr"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="마더수학 학원 위치"
                   />
                 </div>
                   <p className="text-gray-700 mb-2 max-sm:px-3 max-sm:text-[14px]">

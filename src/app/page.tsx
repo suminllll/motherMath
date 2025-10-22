@@ -151,7 +151,7 @@ export default function Home() {
 
 
       {/* Service Cards Section */}
-      <section className="w-full bg-white pb-60 px-8 md:px-4 relative z-10 ">
+      <section className="w-full bg-white pb-20 md:pb-60 px-8 md:px-4 relative z-10 ">
           <div className="flex flex-col md:flex-row md:justify-evenly gap-10 md:gap-[4%] lg:gap-[8%] lg:max-w-7xl mx-auto  max-sm:pt-20">
             {/* Card 1 */}
             <FadeUp delay={0} immediate>
@@ -199,7 +199,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="flex flex-col items-center bg-gray-50 py-30 px-[5%] lg:px-[10%] w-full">
+      <section className="flex flex-col items-center bg-gray-50 py-20 md:py-30 px-[5%] lg:px-[10%] w-full">
           <FadeUp className="w-full lg:w-[1280px]">
             <h2 className="text-3xl text-start  font-bold text-gray-900 mb-22 ">
               마더수학의 강점

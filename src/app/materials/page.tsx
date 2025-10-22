@@ -97,9 +97,9 @@ function MaterialsContent() {
     // img 태그의 width와 height 속성 제거하고 style 속성 수정
     return html.replace(
       /<img([^>]*?)>/g,
-      (match, attributes) => {
+      (_match, attributes) => {
         // width, height 속성 제거
-        let newAttributes = attributes
+        const newAttributes = attributes
           .replace(/\s*width="[^"]*"/gi, '')
           .replace(/\s*height="[^"]*"/gi, '')
           .replace(/\s*style="[^"]*"/gi, '');

@@ -3,12 +3,16 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { loginAdmin, getAdminSession, clearAdminSession, setAdminSession } from '@/lib/auth';
+import { getMaterials} from '@/lib/materials';
+import { getLectures } from '@/lib/lectures';
 
 export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const [admin, setAdmin] = useState<{ username: string; name: string } | null>(null);
+const [materialCount, setMaterialCount] =useState(0)
+const [lectureCount, setLectureCount] = useState(0)
 
   useEffect(() => {
     // 페이지 로드시 세션 확인
@@ -17,7 +21,17 @@ export default function AdminDashboard() {
       setAdmin(savedAdmin);
       setIsAuthenticated(true);
     }
+loadMaterials()
+         
+        
   }, []);
+
+   const loadMaterials = async () => {
+          const materialData = await getMaterials();
+            const lectureData = await getLectures();
+      setMaterialCount(materialData.length)
+setLectureCount(lectureData.length)
+   }
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,8 +133,8 @@ export default function AdminDashboard() {
                 </div>
               </div>
               <div className="ml-4">
-                <div className="text-sm font-medium text-gray-500">총 자료</div>
-                <div className="text-2xl font-bold text-gray-900">24</div>
+                <div className="text-sm font-medium text-gray-500">총 칼럼</div>
+                <div className="text-2xl font-bold text-gray-900">{materialCount}</div>
               </div>
             </div>
           </div>
@@ -133,8 +147,8 @@ export default function AdminDashboard() {
                 </div>
               </div>
               <div className="ml-4">
-                <div className="text-sm font-medium text-gray-500">강의 영상</div>
-                <div className="text-2xl font-bold text-gray-900">12</div>
+                <div className="text-sm font-medium text-gray-500">총 영상</div>
+                <div className="text-2xl font-bold text-gray-900">{lectureCount}</div>
               </div>
             </div>
           </div>
