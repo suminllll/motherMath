@@ -12,7 +12,21 @@ export default function Lectures() {
   const [selectedGrade, setSelectedGrade] = useState('');
   const [gradeOptions, setGradeOptions] = useState<CategoryOption[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(9); // 3x3 그리드
+  const [isMobile, setIsMobile] = useState(false);
+
+  // 모바일 감지
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const itemsPerPage = isMobile ? 5 : 9; // 모바일: 5개, PC: 9개 (3x3 그리드)
 
   useEffect(() => {
     loadLectures();
@@ -168,7 +182,7 @@ export default function Lectures() {
               </div>
             )}
 
-            {lectures.length > 0 && (
+            {(
               <div className="flex justify-center mt-12">
                 <nav className="flex space-x-2">
                   <button

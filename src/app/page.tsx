@@ -294,8 +294,8 @@ export default function Home() {
             </FadeUp>
 
             {/* Reviews */}
-            <FadeUp delay={0.2}>
-              <div className=" mx-auto overflow-x-scroll w-full overflow-hidden">
+            <FadeUp delay={0.2} className="w-full lg:w-1/2">
+              <div className="mx-auto overflow-x-scroll w-full overflow-hidden">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">후기</h2>
                   <div className="flex space-x-4 pb-4">
                     {reviews.map((review, index) => (
