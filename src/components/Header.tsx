@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 const Header = () => {
   const pathname = usePathname();
@@ -28,7 +29,8 @@ const Header = () => {
       <header className="flex justify-center bg-slate-800 text-white fixed top-0 z-50 h-[70px] w-full px-[5%] lg:px-[10%]">
         <div className="flex justify-between items-center h-full w-full lg:w-[1280px]">
           <div className="flex items-center">
-            <Link href="/" className="text-3xl font-bold text-white hover:text-gray-200" onClick={closeMobileMenu}>
+            <Link href="/" className="flex items-center gap-3 text-3xl font-bold text-white hover:text-gray-200" onClick={closeMobileMenu}>
+              <Image src="/logo.png" alt="마더수학 로고" width={40} height={40} className="object-contain" />
               마더수학
             </Link>
           </div>
