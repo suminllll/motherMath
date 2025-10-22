@@ -1,9 +1,41 @@
 'use client'
 
+import { useEffect } from "react";
 import Image from "next/image";
 import FadeUp from "@/components/FadeUp";
 
 export default function About() {
+  useEffect(() => {
+    // 페이지 로드 시 스크롤을 최상단으로 이동
+    window.scrollTo(0, 0);
+
+    // 카카오맵 스크립트 로드
+    const script = document.createElement('script');
+    script.src = 'https://ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js';
+    script.charset = 'UTF-8';
+    script.async = true;
+    script.onload = () => {
+      // @ts-expect-error - Kakao Map API
+      if (window.daum && window.daum.roughmap) {
+        // @ts-expect-error - Kakao Map API
+        new window.daum.roughmap.Lander({
+          timestamp: '1761109620106',
+          key: 'b99txgs5urk',
+          mapWidth: '640',
+          mapHeight: '360'
+        }).render();
+      }
+    };
+    document.body.appendChild(script);
+
+    return () => {
+      // 클린업
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+  }, []);
+
   return (
     <div className="min-h-screen">
       {/* Hero Section with Background Image */}
@@ -21,9 +53,13 @@ export default function About() {
         </div>
       </div>
       {/* 학원 비전과 목표 */}
-      <div className="pt-30 md:pb-50 w-full px-[7%] md:px-[10%] lg:px-[20%]">
+      <div className=" md:pt-30 md:pb-50 w-full px-[7%] md:px-[10%] lg:px-[20%]">
           <div className="prose prose-lg max-w-none">
-            <section className="mb-8">
+            <section className="mb-8 relative">
+              {/* 배경 원 두 개 */}
+              <div className="absolute bottom-[521px] right-0 w-[400px] h-[400px] bg-[#A5C9FF] rounded-full opacity-30 -z-10" />
+              <div className="absolute bottom-[227px] right-50 w-[350px] h-[350px] bg-[#FFB5C5] rounded-full opacity-30 -z-10" />
+
               <FadeUp>
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
                  학원 비전과 목표
@@ -90,7 +126,7 @@ export default function About() {
                 </FadeUp>
 
                 <FadeUp delay={0.5}>
-                  <p className='text-black my-10 text-[16px] md:text-[18px] font-bold'>
+                  <p className=' my-10 text-[16px] font-semibold md:text-[18px]  bg-[#aed4fa61] text-[#52a9ff] rounded-lg px-5 py-6 md:px-20 md:py-10 leading-8'>
                     마더수학에서 아이의 수학 자신감과 잠재력을 최대치로 끌어올리세요.<br/>
 지금 바로 상담 예약을 통해 우리 아이에게 맞는 학습 계획을 만나보실 수 있습니다.
                   </p>
@@ -98,7 +134,7 @@ export default function About() {
               </div>
             </section>
 
-            <section className="mt-40 mb-20">
+            <section className="mt-20 md:mt-40 mb-20">
               <FadeUp>
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
                  마더수학 내부 시설
@@ -134,7 +170,7 @@ export default function About() {
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
                  수업 정보
                 </h2>
-                <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="bg-gray-50 p-10 rounded-lg">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <h3 className="text-lg font-semibold text-gray-800 mb-3">운영 시간</h3>
@@ -165,15 +201,11 @@ export default function About() {
               </FadeUp>
               <FadeUp delay={0.2}>
                 <div className="bg-gray-100 px-1 md:p-8 rounded-lg max-sm:pt-1 mb-10 pb-10">
-                    <div className="w-full h-100 md:h-130 rounded-lg overflow-hidden mb-10">
-                  <iframe
-                    src="https://kko.kakao.com/35y8sS3cwR"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    allowFullScreen
-                    loading="lazy"
-                    title="마더수학 학원 위치"
+                    <div className="w-full rounded-lg overflow-hidden mb-20">
+                  {/* 카카오맵 - 지도퍼가기 */}
+                  <div
+                    id="daumRoughmapContainer1761109620106"
+                    className="root_daum_roughmap root_daum_roughmap_landing"
                   />
                 </div>
                   <p className="text-gray-700 mb-2 max-sm:px-3 max-sm:text-[14px]">

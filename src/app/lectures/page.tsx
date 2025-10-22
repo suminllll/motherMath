@@ -11,6 +11,8 @@ export default function Lectures() {
   const [loading, setLoading] = useState(true);
   const [selectedGrade, setSelectedGrade] = useState('');
   const [gradeOptions, setGradeOptions] = useState<CategoryOption[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(9); // 3x3 그리드
 
   useEffect(() => {
     loadLectures();
@@ -51,6 +53,7 @@ export default function Lectures() {
         }
 
         setLectures(data);
+        setCurrentPage(1); // 필터 변경 시 첫 페이지로 이동
       } catch (error) {
         console.error('Failed to filter lectures:', error);
       } finally {
@@ -60,6 +63,17 @@ export default function Lectures() {
 
     filterLectures();
   }, [selectedGrade]);
+
+  // 페이지네이션 계산
+  const totalPages = Math.ceil(lectures.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentLectures = lectures.slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const getYouTubeEmbedUrl = (url: string) => {
     // youtu.be/VIDEO_ID 또는 youtube.com/watch?v=VIDEO_ID 형식에서 비디오 ID 추출
@@ -108,7 +122,7 @@ export default function Lectures() {
         ) : (
           <>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {lectures.map((lecture) => {
+              {currentLectures.map((lecture) => {
                 return (
                   <div key={lecture.id} className="bg-white rounded-lg shadow-md overflow-hidden">
                     <div className="aspect-video">
@@ -139,7 +153,7 @@ export default function Lectures() {
                       <p className="text-gray-600 text-sm mb-3">
                         {lecture.description}
                       </p>
-                    
+
                     </div>
                   </div>
                 );
@@ -151,6 +165,42 @@ export default function Lectures() {
                 <p className="text-gray-500 text-lg">
                   해당 조건에 맞는 강의 영상이 없습니다.
                 </p>
+              </div>
+            )}
+
+            {lectures.length > 0 && (
+              <div className="flex justify-center mt-12">
+                <nav className="flex space-x-2">
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  >
+                    이전
+                  </button>
+
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`px-3 py-2 text-sm font-medium rounded-md cursor-pointer ${
+                        currentPage === page
+                          ? 'text-white bg-blue-600 border border-blue-600'
+                          : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  >
+                    다음
+                  </button>
+                </nav>
               </div>
             )}
           </>

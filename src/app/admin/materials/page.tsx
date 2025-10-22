@@ -1,8 +1,13 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import dynamic from 'next/dynamic';
 import { getMaterials, createMaterial, updateMaterial, deleteMaterial } from '@/lib/materials';
 import type { Material } from '@/types/database';
+import 'react-quill-new/dist/quill.snow.css';
+
+// React Quill을 dynamic import로 불러오기 (SSR 방지)
+const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 
 export default function AdminMaterials() {
   const [materials, setMaterials] = useState<Material[]>([]);
@@ -13,10 +18,8 @@ export default function AdminMaterials() {
     title: '',
     contents: ''
   });
-  const editorRef = useRef<HTMLDivElement>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
-  const [uploading, setUploading] = useState(false);
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
 
   useEffect(() => {
@@ -109,46 +112,88 @@ export default function AdminMaterials() {
     }
   };
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  // 이미지 크기 조절을 위한 HTML 처리 함수
+  const processHtmlContent = (html: string) => {
+    // img 태그의 width와 height 속성 제거하고 style 속성 수정
+    return html.replace(
+      /<img([^>]*?)>/g,
+      (_match, attributes) => {
+        // width, height 속성 제거
+        const newAttributes = attributes
+          .replace(/\s*width="[^"]*"/gi, '')
+          .replace(/\s*height="[^"]*"/gi, '')
+          .replace(/\s*style="[^"]*"/gi, '');
 
-    setUploading(true);
-    try {
-      const uploadFormData = new FormData();
-      uploadFormData.append('file', file);
-
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: uploadFormData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Upload failed');
+        // 반응형 스타일 추가
+        return `<img${newAttributes} style="max-width: 100%; height: auto; display: block; margin: 0 auto;">`;
       }
-
-      const result = await response.json();
-      
-      // 이미지 HTML을 에디터에 삽입
-      const imageHtml = `<img src="${result.url}" alt="이미지" style="max-width: 100%; height: auto;" />`;
-      setFormData(prev => ({
-        ...prev,
-        contents: prev.contents + imageHtml
-      }));
-      
-      // 에디터 내용 업데이트
-      if (editorRef.current) {
-        editorRef.current.innerHTML = formData.contents + imageHtml;
-      }
-
-      alert('이미지가 업로드되었습니다.');
-    } catch (error) {
-      console.error('Upload error:', error);
-      alert('이미지 업로드에 실패했습니다.');
-    } finally {
-      setUploading(false);
-    }
+    );
   };
+
+  // Quill 모듈 설정 (이미지 업로드 핸들러 포함)
+  const modules = useMemo(() => ({
+    toolbar: {
+      container: [
+        [{ 'header': [1, 2, 3, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'color': [] }, { 'background': [] }],
+        [{ 'align': [] }],
+        ['link', 'image'],
+        ['clean']
+      ],
+      handlers: {
+        image: imageHandler
+      }
+    },
+  }), []);
+
+  const formats = [
+    'header',
+    'bold', 'italic', 'underline', 'strike',
+    'list',
+    'color', 'background',
+    'align',
+    'link', 'image'
+  ];
+
+  // 이미지 업로드 핸들러
+  function imageHandler(this: { quill: { getSelection: (focus?: boolean) => { index: number; length: number }; insertEmbed: (index: number, type: string, value: string) => void; setSelection: (index: number) => void } }) {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+
+      try {
+        const uploadFormData = new FormData();
+        uploadFormData.append('file', file);
+
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: uploadFormData,
+        });
+
+        if (!response.ok) {
+          throw new Error('Upload failed');
+        }
+
+        const result = await response.json();
+
+        // Quill 에디터에 이미지 삽입
+        const quill = this.quill;
+        const range = quill.getSelection(true);
+        quill.insertEmbed(range.index, 'image', result.url);
+        quill.setSelection(range.index + 1);
+      } catch (error) {
+        console.error('Upload error:', error);
+        alert('이미지 업로드에 실패했습니다.');
+      }
+    };
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 pt-35 pb-20 md:py-38">
@@ -169,88 +214,81 @@ export default function AdminMaterials() {
           </div>
         ) : (
           <>
-          <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-300">
-            <table className="w-full">
-              <thead className="bg-gray-50 h-15 text-[14px] text-black">
-                <tr>
-                  <th className="px-6 py-3 text-left tracking-wider w-16">
-                    No
-                  </th>
-                  <th className="px-6 py-3 text-center tracking-wider">
-                    제목
-                  </th>
-                  <th className="px-6 py-3 text-left tracking-wider w-32">
-                    작성자
-                  </th>
-                  <th className="px-6 py-3 text-left tracking-wider w-32">
-                    날짜
-                  </th>
-                  <th className="px-6 py-3 text-left tracking-wider w-32">
-                    관리
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {currentMaterials.map((material, index) => {
-                  const isExpanded = expandedItem === material.id;
-                  return (
-                    <React.Fragment key={material.id}>
-                      <tr id={`material-${material.id}`} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {startIndex + index + 1}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-black text-[14px]">
-                          <button
-                            onClick={() => toggleExpanded(material.id)}
-                            className="hover:text-slate-800 transition-colors text-left cursor-pointer"
-                          >
-                            {material.title}
-                          </button>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          마더수학
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {new Date(material.created_at).toLocaleDateString('ko-KR')}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <button
-                            onClick={() => handleEdit(material)}
-                            className="text-blue-600 hover:text-blue-900 mr-3 cursor-pointer"
-                          >
-                            수정
-                          </button>
-                          <button
-                            onClick={() => handleDelete(material.id)}
-                            className="text-red-600 hover:text-red-900 cursor-pointer"
-                          >
-                            삭제
-                          </button>
-                        </td>
-                      </tr>
-                      {isExpanded && (
-                        <tr>
-                          <td colSpan={5} className="py-4 bg-gray-50">
-                            <div className="pl-[calc(4rem+1.5rem)] pr-6">
-                              {material.contents && (
-                                <div className="max-h-[70vh] overflow-y-auto">
-                                  <div 
-                                    className="text-sm text-gray-700 prose prose-sm max-w-none"
-                                    dangerouslySetInnerHTML={{ 
-                                      __html: material.contents 
-                                    }}
-                                  />
-                                </div>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      )}
-                    </React.Fragment>
-                  );
-                })}
-              </tbody>
-            </table>
+          <div className="bg-white rounded-lg shadow-md border border-gray-300 overflow-hidden">
+            {/* 헤더 */}
+            <div className="bg-gray-50 grid grid-cols-[minmax(100px,1fr)_100px_100px] md:grid-cols-[60px_1fr_120px_120px_120px] border-b border-gray-300 h-15 items-center text-[14px] text-black font-medium overflow-x-auto">
+              <div className="hidden md:block px-6 py-3 text-left">No</div>
+              <div className="pl-4 pr-2 md:px-6 py-3 text-left md:text-center">제목</div>
+              <div className="hidden md:block px-6 py-3 text-left">작성자</div>
+              <div className="pl-2 pr-4 md:px-6 py-3 text-right md:text-left">날짜</div>
+              <div className="pl-2 pr-4 md:px-6 py-3 text-left">관리</div>
+            </div>
+
+            {/* 본문 */}
+            <div className="divide-y divide-gray-200 overflow-x-auto">
+              {currentMaterials.map((material, index) => {
+                const isExpanded = expandedItem === material.id;
+                return (
+                  <div key={material.id} id={`material-${material.id}`}>
+                    {/* 행 */}
+                    <div className="grid grid-cols-[minmax(100px,1fr)_100px_100px] md:grid-cols-[60px_1fr_120px_120px_120px] hover:bg-gray-50 transition-colors items-center">
+                      <div className="hidden md:block px-6 py-4 text-sm text-gray-900">
+                        {startIndex + index + 1}
+                      </div>
+                      <div className="pl-4 pr-2 md:px-6 py-4 text-black text-[14px] min-w-0 overflow-hidden">
+                        <button
+                          onClick={() => toggleExpanded(material.id)}
+                          className="hover:text-slate-800 transition-colors cursor-pointer text-left w-full block overflow-hidden text-ellipsis whitespace-nowrap"
+                        >
+                          {material.title}
+                        </button>
+                      </div>
+                      <div className="hidden md:block px-6 py-4 text-sm text-gray-900 flex-shrink-0">
+                        마더수학
+                      </div>
+                      <div className="pl-2 pr-4 md:px-6 py-4 text-sm text-gray-500 text-right md:text-left flex-shrink-0">
+                        {new Date(material.created_at).toLocaleDateString('ko-KR', {
+                          year: '2-digit',
+                          month: '2-digit',
+                          day: '2-digit'
+                        })}
+                      </div>
+                      <div className="pl-2 pr-4 md:px-6 py-4 text-sm font-medium flex gap-2 flex-shrink-0">
+                        <button
+                          onClick={() => handleEdit(material)}
+                          className="text-blue-600 hover:text-blue-900 cursor-pointer"
+                        >
+                          수정
+                        </button>
+                        <button
+                          onClick={() => handleDelete(material.id)}
+                          className="text-red-600 hover:text-red-900 cursor-pointer"
+                        >
+                          삭제
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* 확장된 내용 */}
+                    {isExpanded && (
+                      <div className="bg-gray-50 px-3 py-4 md:px-6">
+                        {material.contents && (
+                          <div className="max-h-[70vh] overflow-y-auto overflow-x-hidden">
+                            <div
+                              className="text-sm text-gray-700 prose prose-sm w-full max-w-full break-words"
+                              dangerouslySetInnerHTML={{
+                                __html: processHtmlContent(material.contents)
+                              }}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
             {materials.length === 0 && (
               <div className="text-center py-8">
                 <p className="text-gray-500">등록된 자료가 없습니다.</p>
@@ -320,74 +358,15 @@ export default function AdminMaterials() {
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     내용
                   </label>
-                  <div className="border border-gray-300 rounded-md">
-                    {/* 툴바 */}
-                    <div className="flex gap-2 p-2 bg-gray-50 border-b border-gray-300 flex-wrap">
-                      <button
-                        type="button"
-                        onClick={() => document.execCommand('bold')}
-                        className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 font-bold cursor-pointer"
-                      >
-                        B
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => document.execCommand('italic')}
-                        className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 italic cursor-pointer"
-                      >
-                        I
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => document.execCommand('underline')}
-                        className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 underline cursor-pointer"
-                      >
-                        U
-                      </button>
-                      <div className="border-l border-gray-300 mx-1"></div>
-                      <button
-                        type="button"
-                        onClick={() => document.execCommand('insertOrderedList')}
-                        className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 cursor-pointer"
-                      >
-                        1.
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => document.execCommand('insertUnorderedList')}
-                        className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 cursor-pointer"
-                      >
-                        •
-                      </button>
-                      <div className="border-l border-gray-300 mx-1"></div>
-                      <label className="px-3 py-1 text-sm bg-blue-500 text-white border border-blue-500 rounded hover:bg-blue-600 cursor-pointer">
-                        {uploading ? '업로드 중...' : '이미지'}
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                          className="hidden"
-                          disabled={uploading}
-                        />
-                      </label>
-                    </div>
-                    {/* 에디터 */}
-                    <div
-                      ref={editorRef}
-                      contentEditable
-                      className="min-h-[200px] p-3 text-black focus:outline-none"
-                      dangerouslySetInnerHTML={{ __html: formData.contents }}
-                      onInput={(e) => {
-                        const target = e.target as HTMLDivElement;
-                        setFormData({ ...formData, contents: target.innerHTML });
-                      }}
-                      onBlur={(e) => {
-                        const target = e.target as HTMLDivElement;
-                        setFormData({ ...formData, contents: target.innerHTML });
-                      }}
-                      style={{ minHeight: '200px' }}
-                    />
-                  </div>
+                  <ReactQuill
+                    theme="snow"
+                    value={formData.contents}
+                    onChange={(content) => setFormData({ ...formData, contents: content })}
+                    modules={modules}
+                    formats={formats}
+                    className="bg-white"
+                    style={{ height: '400px', marginBottom: '50px' }}
+                  />
                 </div>
                 <div className="flex justify-end space-x-3 pt-4">
                   <button

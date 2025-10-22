@@ -44,7 +44,10 @@ export async function PUT(request: NextRequest) {
     const body = await request.json()
     const { id, title, contents } = body
 
+    console.log('PUT request received:', { id, title, contentsLength: contents?.length })
+
     if (!id || !title || !contents) {
+      console.error('Missing required fields:', { id: !!id, title: !!title, contents: !!contents })
       return NextResponse.json(
         { error: 'ID, title and contents are required' },
         { status: 400 }
@@ -52,7 +55,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const supabaseAdmin = createSupabaseAdmin()
-    
+
     const { data, error } = await supabaseAdmin
       .from('materials')
       .update({ title, contents })
@@ -61,18 +64,19 @@ export async function PUT(request: NextRequest) {
       .single()
 
     if (error) {
-      console.error('Error updating material:', error)
+      console.error('Supabase error updating material:', error)
       return NextResponse.json(
-        { error: 'Failed to update material' },
+        { error: 'Failed to update material', details: error.message },
         { status: 500 }
       )
     }
 
+    console.log('Material updated successfully:', data?.id)
     return NextResponse.json(data)
   } catch (error) {
     console.error('API error:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }

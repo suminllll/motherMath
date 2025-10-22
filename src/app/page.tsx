@@ -9,6 +9,8 @@ import { LiaUserCheckSolid } from "react-icons/lia";
 import { MdOutlineLibraryBooks } from "react-icons/md";
 import { IoStatsChartOutline } from "react-icons/io5";
 import { BsFileText } from "react-icons/bs";
+import { RiKakaoTalkFill } from "react-icons/ri";
+import { FaYoutube, FaPhone } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { getAnnouncements } from "@/lib/materials";
 import type { Material } from "@/types/database";
@@ -57,11 +59,45 @@ export default function Home() {
   }, []);
   return (
     <div className="min-h-screen bg-slate-800 w-full">
+      {/* Floating Buttons */}
+      <div className="fixed right-4 md:right-8 bottom-[25vh] md:bottom-[30vh] z-50 flex flex-col gap-3">
+        {/* KakaoTalk Button */}
+        <a
+          href="https://pf.kakao.com/_xlyxkmxj"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-14 h-14 bg-[#FEE500] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200"
+          aria-label="카카오톡 상담"
+        >
+          <RiKakaoTalkFill size={28} className="text-[#3C1E1E]" />
+        </a>
+
+        {/* YouTube Button */}
+        <a
+          href="https://www.youtube.com/@마더수학"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-14 h-14 bg-[#FF0000] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200"
+          aria-label="유튜브 채널"
+        >
+          <FaYoutube size={28} className="text-white" />
+        </a>
+
+        {/* Phone Button */}
+        <a
+          href="tel:02-1224-5576"
+          className="w-14 h-14 bg-[#026674] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200"
+          aria-label="전화 상담"
+        >
+          <FaPhone size={24} className="text-white" />
+        </a>
+      </div>
+
       {/* Hero Section */}
-      <section className=" bg-slate-800 text-white mx-auto h-[80vh]">
+      <section className=" bg-slate-800 text-white mx-auto h-[80vh] md:pl-[5%] lg:pl-[10%]">
           <div className="hidden md:flex items-center h-full">
             {/* Left Content */}
-            <div className="flex-1 space-y-4 pl-[10%]">
+            <div className="flex-1 space-y-6 md:space-y-10 lg:space-y-16 lg:min-w-[500px]">
                 <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold leading-tight">
                   수학의 실력을 넘어,<br />
                   사고력을 키우는 곳
@@ -163,7 +199,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="flex flex-col items-center bg-gray-50 py-30 px-[10%] w-full">
+      <section className="flex flex-col items-center bg-gray-50 py-30 px-[5%] lg:px-[10%] w-full">
           <FadeUp className="w-full lg:w-[1280px]">
             <h2 className="text-3xl text-start  font-bold text-gray-900 mb-22 ">
               마더수학의 강점
@@ -226,7 +262,7 @@ export default function Home() {
       </section>
 
       {/* Announcements & Reviews Section */}
-      <section className="flex justify-center bg-white pt-30 pb-40 px-[10%] mx-auto  w-full">
+      <section className="flex justify-center bg-white pt-30 pb-40 px-[5%] lg:px-[10%] mx-auto  w-full">
             {/* Announcements */}
            <div className="flex flex-col gap-10 lg:flex-row lg:justify-between overflow-x-hidden w-full lg:w-[1280px]">
             <FadeUp>

@@ -92,9 +92,27 @@ function MaterialsContent() {
     }
   };
 
+  // 이미지 크기 조절을 위한 HTML 처리 함수
+  const processHtmlContent = (html: string) => {
+    // img 태그의 width와 height 속성 제거하고 style 속성 수정
+    return html.replace(
+      /<img([^>]*?)>/g,
+      (match, attributes) => {
+        // width, height 속성 제거
+        let newAttributes = attributes
+          .replace(/\s*width="[^"]*"/gi, '')
+          .replace(/\s*height="[^"]*"/gi, '')
+          .replace(/\s*style="[^"]*"/gi, '');
+
+        // 반응형 스타일 추가
+        return `<img${newAttributes} style="max-width: 100%; height: auto; display: block; margin: 0 auto;">`;
+      }
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 pt-35 pb-20 md:py-50">
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-6xl mx-auto px-4 md:px-10">
         
         <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-10 md:mb-18">
           교육 칼럼
@@ -132,71 +150,65 @@ function MaterialsContent() {
           </div>
         ) : (
           <>
-            <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-300">
-              <table className="w-full">
-                <thead className="bg-gray-50 h-15 text-[14px] text-black">
-                  <tr>
-                    <th className="px-6 py-3 text-left  tracking-wider w-16">
-                      No
-                    </th>
-                    <th className="px-6 py-3 text-center tracking-wider ">
-                      제목
-                    </th>
-                    <th className="px-6 py-3 text-left  tracking-wider w-32">
-                      작성자
-                    </th>
-                    <th className="px-6 py-3 text-left  tracking-wider w-32">
-                      날짜
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {currentMaterials.map((material, index) => {
-                    const isExpanded = expandedItem === material.id;
-                    return (
-                      <React.Fragment key={material.id}>
-                        <tr id={`material-${material.id}`} className="hover:bg-gray-50">
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {startIndex + index + 1}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-black text-[14px]">
-                            <button
-                              onClick={() => toggleExpanded(material.id)}
-                              className="hover:text-slate-800 transition-colors cursor-pointer"
-                            >
-                              {material.title}
-                            </button>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            마더수학
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {new Date(material.created_at).toLocaleDateString('ko-KR')}
-                          </td>
-                        </tr>
-                        {isExpanded && (
-                          <tr>
-                            <td colSpan={4} className="py-4 bg-gray-50">
-                              <div className="px-5 md:pl-[calc(4rem+1.5rem)] md:pr-6">
-                                {material.contents && (
-                                  <div className="max-h-[70vh] overflow-y-auto">
-                                    <div 
-                                      className="text-sm text-gray-700 prose prose-sm max-w-none"
-                                      dangerouslySetInnerHTML={{ 
-                                        __html: material.contents 
-                                      }}
-                                    />
-                                  </div>
-                                )}
-                              </div>
-                            </td>
-                          </tr>
-                        )}
-                      </React.Fragment>
-                    );
-                  })}
-                </tbody>
-              </table>
+            <div className="bg-white rounded-lg shadow-md border border-gray-300 overflow-hidden">
+              {/* 헤더 */}
+              <div className="bg-gray-50 grid grid-cols-[minmax(100px,1fr)_100px] md:grid-cols-[60px_1fr_120px_120px] border-b border-gray-300 h-15 items-center text-[14px] text-black font-medium overflow-x-auto">
+                <div className="hidden md:block px-6 py-3 text-left">No</div>
+                <div className="pl-4 pr-2 md:px-6 py-3 text-left md:text-center">제목</div>
+                <div className="hidden md:block px-6 py-3 text-left">작성자</div>
+                <div className="pl-2 pr-4 md:px-6 py-3 text-right md:text-left">날짜</div>
+              </div>
+
+              {/* 본문 */}
+              <div className="divide-y divide-gray-200 overflow-x-auto">
+                {currentMaterials.map((material, index) => {
+                  const isExpanded = expandedItem === material.id;
+                  return (
+                    <div key={material.id} id={`material-${material.id}`}>
+                      {/* 행 */}
+                      <div className="grid grid-cols-[minmax(100px,1fr)_100px] md:grid-cols-[60px_1fr_120px_120px] hover:bg-gray-50 transition-colors items-center">
+                        <div className="hidden md:block px-6 py-4 text-sm text-gray-900">
+                          {startIndex + index + 1}
+                        </div>
+                        <div className="pl-4 pr-2 md:px-6 py-4 text-black text-[14px] min-w-0 overflow-hidden">
+                          <button
+                            onClick={() => toggleExpanded(material.id)}
+                            className="hover:text-slate-800 transition-colors cursor-pointer text-left w-full block overflow-hidden text-ellipsis whitespace-nowrap"
+                          >
+                            {material.title}
+                          </button>
+                        </div>
+                        <div className="hidden md:block px-6 py-4 text-sm text-gray-900 flex-shrink-0">
+                          마더수학
+                        </div>
+                        <div className="pl-2 pr-4 md:px-6 py-4 text-sm text-gray-500 text-right md:text-left flex-shrink-0">
+                          {new Date(material.created_at).toLocaleDateString('ko-KR', {
+                            year: '2-digit',
+                            month: '2-digit',
+                            day: '2-digit'
+                          })}
+                        </div>
+                      </div>
+
+                      {/* 확장된 내용 */}
+                      {isExpanded && (
+                        <div className="bg-gray-50 px-3 py-4 md:px-6">
+                          {material.contents && (
+                            <div className="max-h-[70vh] overflow-y-auto overflow-x-hidden">
+                              <div
+                                className="text-sm text-gray-700 prose prose-sm w-full max-w-full break-words"
+                                dangerouslySetInnerHTML={{
+                                  __html: processHtmlContent(material.contents)
+                                }}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
             {materials.length === 0 && !loading && (
