@@ -231,7 +231,7 @@ export default function Home() {
             <FadeUp delay={0.2}>
               <div className="bg-[#026674] md:mt-[-50px] h-[300px] md:h-[350px] text-white w-[300px] lg:w-[350px] rounded-lg flex flex-col items-center justify-center space-y-4 shadow-lg">
                  <BsGraphUpArrow size={50}/>
-                  <h3 className="text-xl font-bold">원생들 성적 향상 시례</h3>
+                  <h3 className="text-xl font-bold">원생들 성적 향상 사례</h3>
                   <p className="text-l opacity-90 text-center">
                     마더수학 원생들의 수상소식,<br/> 공부습관, 변화사례 공유
                   </p>
