@@ -22,6 +22,127 @@ export default function AdminMaterials() {
   const [itemsPerPage] = useState(10);
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
 
+  // Quill 모듈이 로드되면 커스텀 Size 포맷 등록
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      import('react-quill-new').then((module) => {
+        const Quill = module.default.Quill;
+        if (Quill) {
+          const SizeStyle = Quill.import('attributors/style/size');
+          // whitelist를 null로 설정하여 모든 크기 허용
+          SizeStyle.whitelist = null;
+          Quill.register(SizeStyle, true);
+        }
+      });
+    }
+  }, []);
+
+  // 모달이 열릴 때 Quill 툴바에 커스텀 input 추가
+  useEffect(() => {
+    if (isModalOpen) {
+      // Quill이 렌더링될 때까지 대기
+      const timer = setTimeout(() => {
+        const toolbar = document.querySelector('.ql-toolbar');
+        const existingInput = document.querySelector('.custom-font-size-input');
+
+        // 이미 존재하면 제거
+        if (existingInput) {
+          existingInput.parentElement?.remove();
+        }
+
+        if (toolbar) {
+          // 툴바가 줄바꿈되지 않도록 설정
+          toolbar.style.flexWrap = 'nowrap';
+          toolbar.style.overflowX = 'auto';
+
+          // size picker 찾기
+          const sizePicker = toolbar.querySelector('.ql-size');
+          const sizePickerParent = sizePicker?.parentElement;
+
+          // 커스텀 컨테이너 생성
+          const customContainer = document.createElement('span');
+          customContainer.className = 'custom-font-size-container';
+          customContainer.style.display = 'inline-flex';
+          customContainer.style.alignItems = 'center';
+          customContainer.style.gap = '4px';
+          customContainer.style.marginLeft = '8px';
+          customContainer.style.whiteSpace = 'nowrap';
+
+          // 레이블 생성
+          const label = document.createElement('span');
+          label.textContent = '글자크기';
+          label.style.fontSize = '13px';
+          label.style.color = '#444';
+          label.style.whiteSpace = 'nowrap';
+
+          // 버튼 생성
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'ql-custom-apply';
+          button.textContent = '적용';
+          button.style.width = '45px';
+          button.style.height = '24px';
+          button.style.padding = '3px 5px';
+          button.style.fontSize = '12px';
+          button.style.cursor = 'pointer';
+          button.style.border = '1px solid #ccc';
+          button.style.borderRadius = '3px';
+          button.style.backgroundColor = '#fff';
+          button.style.boxSizing = 'border-box';
+
+          // Input 생성
+          const input = document.createElement('input');
+          input.type = 'number';
+          input.className = 'custom-font-size-input';
+          input.placeholder = '크기';
+          input.style.width = '50px';
+          input.style.height = '24px';
+          input.style.padding = '2px 4px';
+          input.style.border = '1px solid #ccc';
+          input.style.borderRadius = '3px';
+          input.style.fontSize = '13px';
+          input.style.boxSizing = 'border-box';
+          input.min = '1';
+          input.max = '200';
+
+          button.onclick = () => {
+            const size = input.value;
+            if (!size || isNaN(Number(size))) {
+              alert('숫자를 입력해주세요.');
+              return;
+            }
+
+            const quillElement = document.querySelector('.ql-container') as HTMLElement & { __quill?: { getSelection: () => { length: number } | null; format: (name: string, value: string) => void } };
+            if (quillElement && quillElement.__quill) {
+              const editor = quillElement.__quill;
+              const range = editor.getSelection();
+              if (range && range.length > 0) {
+                editor.format('size', `${size}px`);
+                input.value = '';
+              } else {
+                alert('텍스트를 먼저 선택해주세요.');
+              }
+            }
+          };
+
+          // 순서: 레이블 -> Input -> 버튼
+          customContainer.appendChild(label);
+          customContainer.appendChild(input);
+          customContainer.appendChild(button);
+
+          // size picker 바로 다음에 삽입
+          if (sizePickerParent && sizePickerParent.nextSibling) {
+            toolbar.insertBefore(customContainer, sizePickerParent.nextSibling);
+          } else {
+            toolbar.appendChild(customContainer);
+          }
+        }
+      }, 300);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isModalOpen]);
+
   useEffect(() => {
     loadMaterials();
   }, []);
@@ -130,11 +251,12 @@ export default function AdminMaterials() {
     );
   };
 
+
   // Quill 모듈 설정 (이미지 업로드 핸들러 포함)
   const modules = useMemo(() => ({
     toolbar: {
       container: [
-        [{ 'header': [1, 2, 3, false] }],
+        [{ 'size': ['10px', '12px', '14px', '16px', '18px', '20px', '24px', '28px', '32px', '36px', '40px', '48px'] }],
         ['bold', 'italic', 'underline', 'strike'],
         [{ 'list': 'ordered'}, { 'list': 'bullet' }],
         [{ 'color': [] }, { 'background': [] }],
@@ -149,7 +271,7 @@ export default function AdminMaterials() {
   }), []);
 
   const formats = [
-    'header',
+    'size',
     'bold', 'italic', 'underline', 'strike',
     'list',
     'color', 'background',
@@ -225,7 +347,7 @@ export default function AdminMaterials() {
             </div>
 
             {/* 본문 */}
-            <div className="divide-y divide-gray-200 overflow-x-auto">
+            <div className="divide-y divide-gray-200 overflow-x-auto ">
               {currentMaterials.map((material, index) => {
                 const isExpanded = expandedItem === material.id;
                 return (
@@ -271,7 +393,7 @@ export default function AdminMaterials() {
 
                     {/* 확장된 내용 */}
                     {isExpanded && (
-                      <div className="bg-gray-50 px-3 py-4 md:px-6">
+                      <div className="border-t border-gray-200 px-3 py-4 md:px-6">
                         {material.contents && (
                           <div className="max-h-[70vh] overflow-y-auto overflow-x-hidden">
                             <div
@@ -355,7 +477,7 @@ export default function AdminMaterials() {
                   />
                 </div>
                 <div className='h-[550px]'>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 my-1 ">
                     내용
                   </label>
                   <ReactQuill
@@ -365,10 +487,10 @@ export default function AdminMaterials() {
                     modules={modules}
                     formats={formats}
                     className="bg-white"
-                    style={{ height: '450px', marginBottom: '50px' }}
+                    style={{ height: '450px' }}
                   />
                 </div>
-                <div className="flex justify-end space-x-3 pt-4">
+                <div className="flex justify-end space-x-3 ">
                   <button
                     type="button"
                     onClick={closeModal}

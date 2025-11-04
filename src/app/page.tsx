@@ -256,8 +256,8 @@ export default function Home() {
               const IconComponent = feature.icon;
               return (
                 <FadeUp key={index} delay={feature.delay}>
-                  <div className="flex items-start space-x-4">
-                    <div className="w-[90px]">
+                  <div className="flex items-start gap-5">
+                    <div className="w-[65px]">
                       <IconComponent size={50} className="text-[#026674]" />
                     </div>
                     <div>
@@ -295,7 +295,7 @@ export default function Home() {
                         <div>
                         <h3 className="font-medium text-gray-900 text-[15px]">{announcement.title}</h3>
                        </div>
-                        <p className='text-[12px] text-gray-500'>더보기</p>
+                        <p className='text-[12px] text-gray-500 flex-shrink-0 ml-10 sm:w-auto md:ml-8'>더보기</p>
                       </Link>
                     ))
                   )}
