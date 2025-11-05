@@ -28,7 +28,8 @@ export default function AdminMaterials() {
       import('react-quill-new').then((module) => {
         const Quill = module.default.Quill;
         if (Quill) {
-          const SizeStyle = Quill.import('attributors/style/size');
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const SizeStyle = Quill.import('attributors/style/size') as any;
           // whitelist를 null로 설정하여 모든 크기 허용
           SizeStyle.whitelist = null;
           Quill.register(SizeStyle, true);
@@ -42,7 +43,7 @@ export default function AdminMaterials() {
     if (isModalOpen) {
       // Quill이 렌더링될 때까지 대기
       const timer = setTimeout(() => {
-        const toolbar = document.querySelector('.ql-toolbar');
+        const toolbar = document.querySelector('.ql-toolbar') as HTMLElement;
         const existingInput = document.querySelector('.custom-font-size-input');
 
         // 이미 존재하면 제거
