@@ -133,7 +133,7 @@ function MaterialsContent() {
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="flex-1 text-black px-3 py-2 border-none outline-none placeholder-gray-500 text-sm"
+                className="w-full text-black pl-3 py-2 border-none outline-none placeholder-gray-500 text-sm"
                 placeholder="검색어를 입력하세요"
               />
               <button className="px-3 py-2 bg-gray-100 hover:bg-gray-200 transition-colors cursor-pointer">

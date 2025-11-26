@@ -19,6 +19,9 @@ export default function About() {
           alt="마더수학 강의실"
           fill
           className="object-cover"
+          priority
+          placeholder="blur"
+          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
         />
         <div className="absolute inset-0 bg-[#0000008a] bg-opacity-40 flex items-center justify-center">
           <h1 className="text-3xl  md:text-5xl font-bold text-white text-center">
@@ -124,7 +127,7 @@ export default function About() {
                   { src: '/images/about/inside6.jpeg', alt: '마더수학 내부 시설 6' },
                   { src: '/images/about/inside7.jpeg', alt: '마더수학 내부 시설 7' }
                 ].map((image, index) => (
-                  <FadeUp key={index} delay={index * 0.1}>
+                  <FadeUp key={index} delay={index * 0.05}>
                     <div className="overflow-hidden rounded-lg shadow-md">
                       <Image
                         src={image.src}
@@ -175,7 +178,11 @@ export default function About() {
               </FadeUp>
               <FadeUp delay={0.2}>
                 <div className="bg-gray-100 px-1 md:p-8 rounded-lg max-sm:pt-1 mb-10 pb-10">
-                    <div className="w-full h-64 md:h-130 rounded-lg overflow-hidden mb-20">
+                    <div className="w-full h-64 md:h-130 rounded-lg overflow-hidden mb-20 bg-gray-300 relative">
+                  {/* 로딩 인디케이터 */}
+                  <div className="absolute inset-0 flex items-center justify-center text-gray-500 text-sm">
+                    지도 로딩 중...
+                  </div>
                   <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3163.011010650992!2d126.8380093126765!3d37.55480437192497!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357c9c6965ecacc7%3A0x94858cc6cd46e128!2z7ISc7Jq47Yq567OE7IucIOqwleyEnOq1rCDqsJXshJzroZw1MOq4uCA3Mg!5e0!3m2!1sko!2skr!4v1761111855213!5m2!1sko!2skr"
                     width="100%"
@@ -185,6 +192,7 @@ export default function About() {
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
                     title="마더수학 학원 위치"
+                    className="relative z-10"
                   />
                 </div>
                   <p className="text-gray-700 mb-2 max-sm:px-3 max-sm:text-[14px]">

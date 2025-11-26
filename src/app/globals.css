@@ -29,3 +29,100 @@ html {
   margin: 0;
   padding: 0;
 }
+
+/* Quill Editor 커스텀 크기 스타일 - 픽셀 단위 */
+/* 실제 에디터에서 표시될 크기 */
+.ql-editor [style*="font-size"] {
+  /* 인라인 스타일로 적용된 font-size를 그대로 사용 */
+}
+
+.ql-editor .ql-size-10px { font-size: 10px; }
+.ql-editor .ql-size-12px { font-size: 12px; }
+.ql-editor .ql-size-14px { font-size: 14px; }
+.ql-editor .ql-size-16px { font-size: 16px; }
+.ql-editor .ql-size-18px { font-size: 18px; }
+.ql-editor .ql-size-20px { font-size: 20px; }
+.ql-editor .ql-size-24px { font-size: 24px; }
+.ql-editor .ql-size-28px { font-size: 28px; }
+.ql-editor .ql-size-32px { font-size: 32px; }
+.ql-editor .ql-size-36px { font-size: 36px; }
+.ql-editor .ql-size-40px { font-size: 40px; }
+.ql-editor .ql-size-48px { font-size: 48px; }
+
+/* 커스텀 사이즈 입력 버튼 스타일 */
+.ql-snow .ql-toolbar button.ql-customSize::before {
+  content: 'Aa';
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.ql-snow .ql-toolbar button.ql-customSize {
+  width: 28px;
+}
+
+/* 드롭다운이 잘리지 않도록 설정 */
+.ql-toolbar.ql-snow {
+  overflow: visible !important;
+}
+
+.ql-snow .ql-picker {
+  overflow: visible !important;
+}
+
+.ql-container {
+  overflow-y: auto !important;
+}
+
+/* Quill align 클래스 스타일 */
+.ql-align-center {
+  text-align: center;
+}
+
+.ql-align-right {
+  text-align: right;
+}
+
+.ql-align-left {
+  text-align: left;
+}
+
+.ql-align-justify {
+  text-align: justify;
+}
+
+/* Picker 드롭다운에 표시될 레이블 (모두 동일한 크기로 표시, px 없이 숫자만) */
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="10px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="10px"]::before { content: '10'; }
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="12px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="12px"]::before { content: '12'; }
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="14px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="14px"]::before { content: '14'; }
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="16px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="16px"]::before { content: '16'; }
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="18px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="18px"]::before { content: '18'; }
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="20px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="20px"]::before { content: '20'; }
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="24px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="24px"]::before { content: '24'; }
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="28px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="28px"]::before { content: '28'; }
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="32px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="32px"]::before { content: '32'; }
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="36px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="36px"]::before { content: '36'; }
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="40px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="40px"]::before { content: '40'; }
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="48px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="48px"]::before { content: '48'; }

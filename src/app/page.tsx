@@ -14,6 +14,8 @@ import { FaYoutube, FaPhone } from "react-icons/fa";
 import { SiNaver } from "react-icons/si";
 import { useState, useEffect } from "react";
 import { getAnnouncements } from "@/lib/materials";
+import { RiStickyNoteAddLine } from "react-icons/ri";
+import { LuNotebookPen } from "react-icons/lu";
 import type { Material } from "@/types/database";
 import FadeUp from "@/components/FadeUp";
 
@@ -37,6 +39,45 @@ const reviews = [
   {
     author: "박*주",
     content: "수학과 사랑에 빠졌습니다ㅎㅎ 어엿한 이기적 궁뎅이가 되어 시험 성적이 많이 올랐어요^^ 앞으로도 더 많은 것을 배우고 싶습니다~"
+  }
+];
+
+const features = [
+  {
+    icon: BsFileText,
+    title: "입학 및 진단 테스트",
+    description: "레벨 테스트를 통해 학생의 현재 실력 및 강점과 보완점을 진단합니다.",
+    delay: 0.3
+  },
+  {
+    icon: LiaUserCheckSolid,
+    title: "1:1 맞춤 지도 시스템",
+    description: "학생 개개인의 학습 수준과 성향에 맞춘 맞춤형 개별 지도",
+    delay: 0.1
+  },
+  {
+    icon: LuNotebookPen,
+    title: "자율 오답노트 관리 시스템",
+    description: "학생 스스로 오답을 정리하고, 전문 강사의 피드백을 제공하는 과정을 통해 스스로 사고하고 성장하는 학습 습관을 키웁니다.",
+    delay: 0.2
+  },
+  {
+    icon: IoStatsChartOutline,
+    title: "단계별 커리큘럼 운영",
+    description: "수준별 반편성 & 진도별 학습으로 학습 효율 극대화합니다.",
+    delay: 0.2
+  },
+  {
+    icon: RiStickyNoteAddLine ,
+    title: "꼼꼼한 학습 관리 및 피드백",
+    description: "출결, 과제, 진도, 오답 등 학습의 모든 과정을 꼼꼼히 기록하고 관리합니다. 학부모님께는 실시간 출결 알림 시스템을 통해 안심하고 믿을 수 있는 학습 환경을 제공합니다.",
+    delay: 0.4
+  },
+  {
+    icon: MdOutlineLibraryBooks,
+    title: "주간 테스트 / 월간 평가",
+    description: "주기적인 테스트로 학습 성취도를 점검하고, 취약 부분을 보완합니다.",
+    delay: 0.4
   }
 ];
 
@@ -114,7 +155,8 @@ export default function Home() {
                   수학의 실력을 넘어,<br />
                   사고력을 키우는 곳
                 </h1>
-                <h2 className="text-54l md:text-5xl lg:text-7xl font-bold text-white">
+                <h2 className="text-54l md:text-5xl lg:text-7xl font-bold text-white flex items-center gap-4">
+                  <Image src="/logo.png" alt="마더수학 로고" width={80} height={80} className="object-contain" />
                   마더수학
                 </h2>
                 <p className="text-xl text-gray-300">
@@ -145,15 +187,16 @@ export default function Home() {
             />
 
             {/* Dark Overlay */}
-            <div className="absolute inset-0 bg-black bg-opacity-50 z-10"></div>
+            <div className="absolute inset-0 bg-[#5d5a5a99] z-10"></div>
 
             {/* Text Content */}
-            <div className="absolute inset-0 z-20 flex flex-col justify-center space-y-4 px-[10%]">
+            <div className="absolute inset-0 z-20 flex flex-col justify-end pb-[19%] space-y-4 px-[10%]">
                 <h1 className="text-2xl font-bold leading-tight text-white">
                   수학의 실력을 넘어,<br />
                   사고력을 키우는 곳
                 </h1>
-                <h2 className="text-5xl font-bold text-white">
+                <h2 className="text-5xl font-bold text-white flex items-center gap-3">
+                  <Image src="/logo.png" alt="마더수학 로고" width={50} height={50} className="object-contain" />
                   마더수학
                 </h2>
                 <p className="text-lg text-gray-300">
@@ -166,10 +209,10 @@ export default function Home() {
 
       {/* Service Cards Section */}
       <section className="w-full bg-white pb-20 md:pb-60 px-8 md:px-4 relative z-10 ">
-          <div className="flex flex-col md:flex-row md:justify-evenly gap-10 md:gap-[4%] lg:gap-[8%] lg:max-w-7xl mx-auto  max-sm:pt-20">
+          <div className="flex flex-col md:flex-row md:justify-evenly gap-10 items-center md:gap-[4%] lg:gap-[8%] lg:max-w-7xl mx-auto  max-sm:pt-20">
             {/* Card 1 */}
-            <FadeUp delay={0} immediate>
-              <div className="bg-[#026674] md:mt-[-50px] h-[350px] text-white md:w-[300px] lg:w-[350px] rounded-lg flex flex-col items-center justify-center space-y-4 shadow-lg">
+            <FadeUp delay={0}>
+              <div className="bg-[#026674] md:mt-[-50px] h-[300px] md:h-[350px]  text-white w-[300px] lg:w-[350px] rounded-lg flex flex-col items-center justify-center space-y-4 shadow-lg">
                  <SlCalender size={50}/>
                   <h3 className="text-xl font-bold">첫 방문 상담예약</h3>
 
@@ -183,28 +226,28 @@ export default function Home() {
             </FadeUp>
 
             {/* Card 2 */}
-            <FadeUp delay={0.1} immediate>
-              <div className="bg-[#026674] md:mt-[-50px] h-[350px] text-white md:w-[300px] lg:w-[350px] rounded-lg flex flex-col items-center justify-center space-y-4 shadow-lg">
+            <FadeUp delay={0.1}>
+              <div className="bg-[#026674] md:mt-[-50px] h-[300px] md:h-[350px]  text-white  w-[300px] lg:w-[350px] rounded-lg flex flex-col items-center justify-center space-y-4 shadow-lg">
                  <LuTvMinimalPlay size={50}/>
                   <h3 className="text-xl font-bold">마더수학 원장 직강!</h3>
                   <p className="text-l opacity-90">
                     수업영상, 개념정리 영상 주기적 업로드
                   </p>
-                  <Link href="/about" className="mt-[45px] block bg-[#E8D7A2] text-black py-2 px-6 rounded-md text-[16px]">
+                  <Link href="/lectures" className="mt-[45px] block bg-[#E8D7A2] text-black py-2 px-6 rounded-md text-[16px]">
                     강의 보기
                   </Link>
               </div>
             </FadeUp>
 
             {/* Card 3 */}
-            <FadeUp delay={0.2} immediate>
-              <div className="bg-[#026674] md:mt-[-50px] h-[350px] text-white md:w-[300px] lg:w-[350px] rounded-lg flex flex-col items-center justify-center space-y-4 shadow-lg">
+            <FadeUp delay={0.2}>
+              <div className="bg-[#026674] md:mt-[-50px] h-[300px] md:h-[350px] text-white w-[300px] lg:w-[350px] rounded-lg flex flex-col items-center justify-center space-y-4 shadow-lg">
                  <BsGraphUpArrow size={50}/>
-                  <h3 className="text-xl font-bold">원생들 성적 향상 시례</h3>
+                  <h3 className="text-xl font-bold">원생들 성적 향상 사례</h3>
                   <p className="text-l opacity-90 text-center">
                     마더수학 원생들의 수상소식,<br/> 공부습관, 변화사례 공유
                   </p>
-                  <Link href="/materials" className="mt-[45px] block bg-[#E8D7A2] text-black py-2 px-6 rounded-md text-[16px]">
+                  <Link href="/materials?id=a6e7c403-04bf-43c4-b7f8-4400c7fc42ef" className="mt-[45px] block bg-[#E8D7A2] text-black py-2 px-6 rounded-md text-[16px]">
                     사례 보기
                   </Link>
                 </div>
@@ -220,68 +263,35 @@ export default function Home() {
             </h2>
           </FadeUp>
 
-          <div className="grid md:grid-cols-2 gap-y-20  lg:gap-x-[40%] lg:w-[1280px]">
-            {/* Feature 1 */}
-            <FadeUp delay={0.1}>
-              <div className="flex items-start space-x-4">
-                  <LiaUserCheckSolid size={50} className="text-[#026674]"/>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">1:1 맞춤 지도 시스템</h3>
-                  <p className="text-sm text-gray-600">
-                    학생 개개인의 학습 수준과 성향에 맞춘 맞춤형 개별 지도
-                  </p>
-                </div>
-              </div>
-            </FadeUp>
-
-            {/* Feature 2 */}
-            <FadeUp delay={0.2}>
-              <div className="flex items-start space-x-4">
-               <MdOutlineLibraryBooks size={50} className="text-[#026674]"/>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">개념 중심</h3>
-                  <p className="text-sm text-gray-600">
-                    기초 개념부터 심화 응용까지 단계별 체계적 학습 시스템
-                  </p>
-                </div>
-              </div>
-            </FadeUp>
-
-            {/* Feature 3 */}
-            <FadeUp delay={0.3}>
-              <div className="flex items-start space-x-4">
-             <BsFileText size={50} className="text-[#026674]"/>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">입학 실력 테스트</h3>
-                  <p className="text-sm text-gray-600">
-                    시험 대비 자료, 학년별/단원별 PDF 제공
-                  </p>
-                </div>
-              </div>
-            </FadeUp>
-
-            {/* Feature 4 */}
-            <FadeUp delay={0.4}>
-              <div className="flex items-start space-x-4">
-               <IoStatsChartOutline size={50} className="text-[#026674]"/>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">오랜 지도 전문가 데이터 기반 체계적 관리</h3>
-                  <p className="text-sm text-gray-600">
-                    학습 데이터 분석을 통한 개인별 성취도 관리 및 성적 향상 전략
-                  </p>
-                </div>
-              </div>
-            </FadeUp>
+          <div className="grid md:grid-cols-2 gap-y-20  lg:gap-x-[20%] lg:w-[1280px]">
+            {features.map((feature, index) => {
+              const IconComponent = feature.icon;
+              return (
+                <FadeUp key={index} delay={feature.delay}>
+                  <div className="flex items-start gap-5">
+                    <div className="w-[65px]">
+                      <IconComponent size={50} className="text-[#026674]" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h3>
+                      <p className="text-sm text-gray-600">
+                        {feature.description}
+                      </p>
+                    </div>
+                  </div>
+                </FadeUp>
+              );
+            })}
           </div>
       </section>
 
       {/* Announcements & Reviews Section */}
       <section className="flex justify-center bg-white pt-30 pb-40 px-[5%] lg:px-[10%] mx-auto  w-full">
             {/* Announcements */}
-           <div className="flex flex-col gap-10 lg:flex-row lg:gap-10 overflow-x-hidden w-full lg:w-[1280px]">
-            <FadeUp className="w-full lg:w-1/2">
+           <div className="flex flex-col gap-10 lg:flex-row lg:gap-10 w-full lg:w-[1280px]">
+            <FadeUp className="w-full lg:w-1/2 mb-5 lg:mb-0">
               <div className="w-full mx-auto">
-                <h2 className="text-2xl font-bold text-gray-900 mb-10">교육칼럼</h2>
+                <h2 className="text-3xl font-bold text-gray-900 mb-10">교육칼럼</h2>
                 <div className="space-y-4">
                   {loading ? (
                     <div className="text-gray-500">교육칼럼을 불러오는 중...</div>
@@ -297,7 +307,7 @@ export default function Home() {
                         <div>
                         <h3 className="font-medium text-gray-900 text-[15px]">{announcement.title}</h3>
                        </div>
-                        <p className='text-[12px] text-gray-500'>더보기</p>
+                        <p className='text-[12px] text-gray-500 flex-shrink-0 ml-10 sm:w-auto md:ml-8'>더보기</p>
                       </Link>
                     ))
                   )}
@@ -308,7 +318,7 @@ export default function Home() {
             {/* Reviews */}
             <FadeUp delay={0.2} className="w-full lg:w-1/2">
               <div className="mx-auto overflow-x-scroll w-full overflow-hidden">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">후기</h2>
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">후기</h2>
                   <div className="flex space-x-4 pb-4">
                     {reviews.map((review, index) => (
                       <div key={index} className="bg-gray-50 p-6 rounded-lg w-[200px] md:w-[252px] flex-shrink-0">

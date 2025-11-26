@@ -98,9 +98,9 @@ setLectureCount(lectureData.length)
               {isLoading ? '로그인 중...' : '로그인'}
             </button>
           </form>
-          <p className="text-center text-gray-500 text-sm mt-4">
+          {/* <p className="text-center text-gray-500 text-sm mt-4">
             데모: admin / admin123
-          </p>
+          </p> */}
         </div>
       </div>
     );
@@ -110,7 +110,7 @@ setLectureCount(lectureData.length)
     <div className="min-h-screen bg-gray-50 py-38">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">관리자 대시보드</h1>
+          <h1 className="max-sm:mb-5 text-3xl font-bold text-gray-900">관리자 대시보드</h1>
           <div className="flex items-center gap-4">
             <span className="text-gray-600">
               {admin?.name || admin?.username}님 환영합니다
