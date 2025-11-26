@@ -27,10 +27,10 @@ export default function Consultation() {
           </div>
 
           {/* 채팅 상담 버튼 */}
-         <a href="http://pf.kakao.com/_qaxnen" target="_blank" rel="noopener noreferrer" className="hidden md:block bg-[#3C3035] rounded-full text-[#FAE100] px-10 py-5 mb-5 text-2xl">
+         <a href="http://pf.kakao.com/_xojspn" target="_blank" rel="noopener noreferrer" className="hidden md:block bg-[#3C3035] rounded-full text-[#FAE100] px-10 py-5 mb-5 text-2xl">
             카카오톡채널 채팅상담/문의하기
           </a>
-            <a href="http://pf.kakao.com/_qaxnen" target="_blank" rel="noopener noreferrer" className="block md:hidden bg-[#3C3035] rounded-full text-[#FAE100] px-10 py-3 mb-5 text-xl">
+            <a href="http://pf.kakao.com/_xojspn" target="_blank" rel="noopener noreferrer" className="block md:hidden bg-[#3C3035] rounded-full text-[#FAE100] px-10 py-3 mb-5 text-xl">
             카카오톡채널 <br/>채팅상담/문의하기
           </a>
 

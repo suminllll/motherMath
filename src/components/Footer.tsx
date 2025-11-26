@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 const Footer = () => {
   return (
     <footer className="bg-slate-800 text-white py-8 mt-auto">
@@ -13,12 +11,14 @@ const Footer = () => {
               연락처 : 02-1224-5576
             </p>
           </div>
-          <Link 
-            href="/consultation" 
+          <a
+            href="http://pf.kakao.com/_xojspn"
+            target="_blank"
+            rel="noopener noreferrer"
             className="bg-[#e8d7a2] text-black px-8 py-3 rounded-md font-medium  transition-colors inline-flex items-center"
           >
             카카오톡 상담
-          </Link>
+          </a>
         </div>
         
         <div className="mt-6 pt-4 border-t border-gray-700 ">
