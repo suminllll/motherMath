@@ -111,7 +111,7 @@ export default function Home() {
           className="w-14 h-14 bg-[#FEE500] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200"
           aria-label="카카오톡 상담"
         >
-          <RiKakaoTalkFill size={28} className="text-[#3C1E1E]" />
+          <RiKakaoTalkFill size={32} className="text-[#3C1E1E]" />
         </a>
 
         {/* Naver Booking Button */}
@@ -122,7 +122,7 @@ export default function Home() {
           className="w-14 h-14 bg-[#03C75A] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200"
           aria-label="네이버 예약"
         >
-          <SiNaver size={28} className="text-white" />
+          <SiNaver size={22} className="text-white" />
         </a>
 
         {/* YouTube Button */}
