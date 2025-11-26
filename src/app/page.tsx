@@ -11,6 +11,7 @@ import { IoStatsChartOutline } from "react-icons/io5";
 import { BsFileText } from "react-icons/bs";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import { FaYoutube, FaPhone } from "react-icons/fa";
+import { SiNaver } from "react-icons/si";
 import { useState, useEffect } from "react";
 import { getAnnouncements } from "@/lib/materials";
 import type { Material } from "@/types/database";
@@ -63,13 +64,24 @@ export default function Home() {
       <div className="fixed right-4 md:right-8 bottom-[25vh] md:bottom-[30vh] z-50 flex flex-col gap-3">
         {/* KakaoTalk Button */}
         <a
-          href="https://pf.kakao.com/_xlyxkmxj"
+          href="http://pf.kakao.com/_xojspn"
           target="_blank"
           rel="noopener noreferrer"
           className="w-14 h-14 bg-[#FEE500] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200"
           aria-label="카카오톡 상담"
         >
           <RiKakaoTalkFill size={28} className="text-[#3C1E1E]" />
+        </a>
+
+        {/* Naver Booking Button */}
+        <a
+          href="https://m.booking.naver.com/booking/6/bizes/1533375/items/7180904?area=pll&entry=pll&lang=ko&startDate=2025-11-21&theme=place"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-14 h-14 bg-[#03C75A] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200"
+          aria-label="네이버 예약"
+        >
+          <SiNaver size={28} className="text-white" />
         </a>
 
         {/* YouTube Button */}
