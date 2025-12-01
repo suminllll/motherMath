@@ -138,7 +138,7 @@ export default function Home() {
 
         {/* Phone Button */}
         <a
-          href="tel:02-1224-5576"
+          href="tel:02-3662-0747"
           className="w-14 h-14 bg-[#026674] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200"
           aria-label="전화 상담"
         >
