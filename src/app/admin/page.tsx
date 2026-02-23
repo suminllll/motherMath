@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { loginAdmin, getAdminSession, clearAdminSession, setAdminSession } from '@/lib/auth';
 import { getMaterials} from '@/lib/materials';
 import { getLectures } from '@/lib/lectures';
+import { getStudentRecords } from '@/lib/student-records';
 
 export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -13,6 +14,7 @@ export default function AdminDashboard() {
   const [admin, setAdmin] = useState<{ username: string; name: string } | null>(null);
 const [materialCount, setMaterialCount] =useState(0)
 const [lectureCount, setLectureCount] = useState(0)
+const [studentRecordCount, setStudentRecordCount] = useState(0)
 
   useEffect(() => {
     // 페이지 로드시 세션 확인
@@ -29,8 +31,10 @@ loadMaterials()
    const loadMaterials = async () => {
           const materialData = await getMaterials();
             const lectureData = await getLectures();
+            const studentRecordData = await getStudentRecords();
       setMaterialCount(materialData.length)
 setLectureCount(lectureData.length)
+setStudentRecordCount(studentRecordData.length)
    }
 
   const handleLogin = (e: React.FormEvent) => {
@@ -153,9 +157,20 @@ setLectureCount(lectureData.length)
             </div>
           </div>
 
- 
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <div className="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
+                  <span className="text-white text-sm">📈</span>
+                </div>
+              </div>
+              <div className="ml-4">
+                <div className="text-sm font-medium text-gray-500">학생변화기록</div>
+                <div className="text-2xl font-bold text-gray-900">{studentRecordCount}</div>
+              </div>
+            </div>
+          </div>
 
-         
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
@@ -191,7 +206,23 @@ setLectureCount(lectureData.length)
               >
                 강의 영상 관리하기
               </Link>
-        
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              학생변화기록 관리
+            </h2>
+            <p className="text-gray-600 mb-4">
+              학생 성장 이미지 기록을 관리할 수 있습니다.
+            </p>
+            <div className="space-y-2">
+              <Link
+                href="/admin/student-records"
+                className="block w-full bg-purple-600 text-white text-center py-2 px-4 rounded-md hover:bg-purple-700 transition-colors"
+              >
+                학생변화기록 관리하기
+              </Link>
             </div>
           </div>
         </div>

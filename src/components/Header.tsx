@@ -14,6 +14,7 @@ const Header = () => {
     { name: '상담예약', href: '/consultation', icon: '' },
     { name: '강의영상', href: '/lectures', icon: '' },
     { name: '교육칼럼', href: '/materials', icon: '' },
+    { name: '학생변화기록', href: '/student-records', icon: '' },
   ];
 
   const toggleMobileMenu = () => {

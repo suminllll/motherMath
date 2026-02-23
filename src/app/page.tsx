@@ -12,11 +12,12 @@ import { BsFileText } from "react-icons/bs";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import { FaYoutube, FaPhone } from "react-icons/fa";
 import { SiNaver } from "react-icons/si";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getAnnouncements } from "@/lib/materials";
+import { getLatestStudentRecords } from "@/lib/student-records";
 import { RiStickyNoteAddLine } from "react-icons/ri";
 import { LuNotebookPen } from "react-icons/lu";
-import type { Material } from "@/types/database";
+import type { Material, StudentRecord } from "@/types/database";
 import FadeUp from "@/components/FadeUp";
 
 const reviews = [
@@ -83,22 +84,37 @@ const features = [
 
 export default function Home() {
   const [announcements, setAnnouncements] = useState<Material[]>([]);
+  const [studentRecords, setStudentRecords] = useState<StudentRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const fetchAnnouncements = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getAnnouncements(3);
-        setAnnouncements(data);
+        const [announcementData, recordData] = await Promise.all([
+          getAnnouncements(3),
+          getLatestStudentRecords(8),
+        ]);
+        setAnnouncements(announcementData);
+        setStudentRecords(recordData);
       } catch (error) {
-        console.error('Error fetching announcements:', error);
+        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAnnouncements();
+    fetchData();
   }, []);
+
+  const scrollCarousel = (direction: 'left' | 'right') => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({
+        left: direction === 'left' ? -300 : 300,
+        behavior: 'smooth',
+      });
+    }
+  };
   return (
     <div className="min-h-screen bg-slate-800 w-full">
       {/* Floating Buttons */}
@@ -284,6 +300,75 @@ export default function Home() {
             })}
           </div>
       </section>
+
+      {/* 학생변화기록 Carousel Section */}
+      {studentRecords.length > 0 && (
+        <section className="bg-white pt-30 pb-40 px-[5%] lg:px-[10%] w-full">
+          <FadeUp className="w-full lg:w-[1280px] mx-auto">
+            <div className="flex justify-between items-end mb-10">
+              <h2 className="text-3xl font-bold text-gray-900">학생변화기록</h2>
+              <Link href="/student-records" className="text-sm text-blue-600 hover:underline">
+                전체보기
+              </Link>
+            </div>
+            <div className="relative">
+              {/* 왼쪽 화살표 */}
+              <button
+                onClick={() => scrollCarousel('left')}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-10 h-10 bg-white shadow-md rounded-full flex items-center justify-center hover:bg-gray-50 transition-colors cursor-pointer"
+                aria-label="이전"
+              >
+                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+
+              {/* 카드 슬라이더 */}
+              <div
+                ref={carouselRef}
+                className="flex gap-4 overflow-x-auto scroll-smooth pb-2"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
+                {studentRecords.map((record) => (
+                  <Link
+                    key={record.id}
+                    href={`/student-records/${record.id}`}
+                    className="flex-shrink-0 w-52 md:w-60 group"
+                  >
+                    <div className="aspect-[4/3] relative rounded-lg overflow-hidden bg-gray-100 shadow-sm group-hover:shadow-md transition-shadow">
+                      {record.images && record.images.length > 0 ? (
+                        <Image
+                          src={record.images[0]}
+                          alt={record.title}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          sizes="240px"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                          이미지 없음
+                        </div>
+                      )}
+                    </div>
+                    <p className="mt-2 text-sm font-medium text-gray-800 truncate">{record.title}</p>
+                  </Link>
+                ))}
+              </div>
+
+              {/* 오른쪽 화살표 */}
+              <button
+                onClick={() => scrollCarousel('right')}
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-10 h-10 bg-white shadow-md rounded-full flex items-center justify-center hover:bg-gray-50 transition-colors cursor-pointer"
+                aria-label="다음"
+              >
+                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </FadeUp>
+        </section>
+      )}
 
       {/* Announcements & Reviews Section */}
       <section className="flex justify-center bg-white pt-30 pb-40 px-[5%] lg:px-[10%] mx-auto  w-full">
