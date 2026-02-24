@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
+import Providers from "./providers";
 
 const notoSans = Noto_Sans_KR({
   variable: '--font-noto-sans',
@@ -59,6 +60,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  
   return (
     <html lang="ko">
       <head>
@@ -70,9 +73,11 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <Header />
+        <Providers>
         <main className="">
           {children}
         </main>
+        </Providers>
         <Footer />
         <ScrollToTop />
       </body>
