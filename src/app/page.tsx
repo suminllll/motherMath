@@ -118,7 +118,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-slate-800 w-full">
       {/* Floating Buttons */}
-      <div className="fixed right-4 md:right-8 bottom-[25vh] md:bottom-[30vh] z-50 flex flex-col gap-3">
+      <div className="fixed right-4 md:right-8 bottom-24 md:bottom-32 z-50 flex flex-col gap-3">
         {/* KakaoTalk Button */}
         <a
           href="http://pf.kakao.com/_xojspn"
@@ -333,19 +333,20 @@ export default function Home() {
                   <Link
                     key={record.id}
                     href={`/student-records/${record.id}`}
-                    className="flex-shrink-0 w-52 md:w-60 group"
+                    className="flex-shrink-0 w-full md:w-60 group"
                   >
-                    <div className="aspect-[4/3] relative rounded-lg overflow-hidden bg-gray-100 shadow-sm group-hover:shadow-md transition-shadow h-[300px]">
+                    <div className="rounded-lg overflow-hidden bg-gray-100 shadow-sm group-hover:shadow-md transition-shadow">
                       {record.images && record.images.length > 0 ? (
                         <Image
                           src={record.images[0]}
                           alt={record.title}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
-                          sizes="240px"
+                          width={600}
+                          height={450}
+                          className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
+                          sizes="(max-width: 768px) 100vw, 240px"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                        <div className="w-full h-[300px] flex items-center justify-center text-gray-400 text-sm">
                           이미지 없음
                         </div>
                       )}
