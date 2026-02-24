@@ -109,8 +109,10 @@ export default function Home() {
 
   const scrollCarousel = (direction: 'left' | 'right') => {
     if (carouselRef.current) {
+      const cardWidth = (carouselRef.current.firstElementChild as HTMLElement)?.offsetWidth ?? 300;
+      const gap = 16; // gap-4 = 16px
       carouselRef.current.scrollBy({
-        left: direction === 'left' ? -300 : 300,
+        left: direction === 'left' ? -(cardWidth + gap) : (cardWidth + gap),
         behavior: 'smooth',
       });
     }
@@ -333,9 +335,9 @@ export default function Home() {
                   <Link
                     key={record.id}
                     href={`/student-records/${record.id}`}
-                    className="flex-shrink-0 w-full md:w-60 group"
+                    className="flex-shrink-0 group"
                   >
-                    <div className="rounded-lg overflow-hidden bg-gray-100 shadow-sm group-hover:shadow-md transition-shadow md:aspect-[4/3] md:h-[300px]">
+                    <div className="rounded-lg overflow-hidden bg-gray-100 shadow-sm group-hover:shadow-md transition-shadow md:aspect-[4/3] h-[300px]">
                       {record.images && record.images.length > 0 ? (
                         <Image
                           src={record.images[0]}

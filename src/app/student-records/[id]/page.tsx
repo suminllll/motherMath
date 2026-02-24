@@ -92,8 +92,8 @@ export default function StudentRecordDetail() {
             {record.images.map((url, idx) => (
               <div
                 key={idx}
-                className="w-full relative rounded-lg overflow-hidden shadow-md bg-white cursor-zoom-in md:cursor-default"
-                onClick={() => { if (window.innerWidth < 768) setSelectedImage(url); }}
+                className="w-full relative rounded-lg overflow-hidden shadow-md bg-white cursor-zoom-in"
+                onClick={() => setSelectedImage(url)}
               >
                 <Image
                   src={url}
