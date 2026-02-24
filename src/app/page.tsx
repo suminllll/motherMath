@@ -335,14 +335,14 @@ export default function Home() {
                     href={`/student-records/${record.id}`}
                     className="flex-shrink-0 w-full md:w-60 group"
                   >
-                    <div className="rounded-lg overflow-hidden bg-gray-100 shadow-sm group-hover:shadow-md transition-shadow">
+                    <div className="rounded-lg overflow-hidden bg-gray-100 shadow-sm group-hover:shadow-md transition-shadow md:aspect-[4/3] md:h-[300px]">
                       {record.images && record.images.length > 0 ? (
                         <Image
                           src={record.images[0]}
                           alt={record.title}
                           width={600}
                           height={450}
-                          className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           sizes="(max-width: 768px) 100vw, 240px"
                         />
                       ) : (
