@@ -92,8 +92,8 @@ export default function StudentRecordDetail() {
             {record.images.map((url, idx) => (
               <div
                 key={idx}
-                className="w-full relative rounded-lg overflow-hidden shadow-md bg-white cursor-zoom-in"
-                onClick={() => setSelectedImage(url)}
+                className="w-full relative rounded-lg overflow-hidden shadow-md bg-white cursor-zoom-in md:cursor-default"
+                onClick={() => { if (window.innerWidth < 768) setSelectedImage(url); }}
               >
                 <Image
                   src={url}
@@ -101,7 +101,7 @@ export default function StudentRecordDetail() {
                   width={800}
                   height={600}
                   className="w-full h-auto object-contain"
-                  sizes="(max-width: 672px) 100vw, 672px"
+                  sizes="(max-width: 768px) 95vw, 80vw"
                 />
               </div>
             ))}
