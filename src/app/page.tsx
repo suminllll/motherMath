@@ -263,7 +263,7 @@ export default function Home() {
                   <p className="text-l opacity-90 text-center">
                     마더수학 원생들의 수상소식,<br/> 공부습관, 변화사례 공유
                   </p>
-                  <Link href="/materials?id=a6e7c403-04bf-43c4-b7f8-4400c7fc42ef" className="mt-[45px] block bg-[#E8D7A2] text-black py-2 px-6 rounded-md text-[16px]">
+                  <Link href="/student-records" className="mt-[45px] block bg-[#E8D7A2] text-black py-2 px-6 rounded-md text-[16px]">
                     사례 보기
                   </Link>
                 </div>
@@ -303,7 +303,7 @@ export default function Home() {
 
       {/* 학생변화기록 Carousel Section */}
       {studentRecords.length > 0 && (
-        <section className="bg-white pt-30 pb-40 px-[5%] lg:px-[10%] w-full">
+        <section className="bg-white pt-30 px-[5%] lg:px-[10%] w-full">
           <FadeUp className="w-full lg:w-[1280px] mx-auto">
             <div className="flex justify-between items-end mb-10">
               <h2 className="text-3xl font-bold text-gray-900">학생변화기록</h2>
@@ -335,7 +335,7 @@ export default function Home() {
                     href={`/student-records/${record.id}`}
                     className="flex-shrink-0 w-52 md:w-60 group"
                   >
-                    <div className="aspect-[4/3] relative rounded-lg overflow-hidden bg-gray-100 shadow-sm group-hover:shadow-md transition-shadow">
+                    <div className="aspect-[4/3] relative rounded-lg overflow-hidden bg-gray-100 shadow-sm group-hover:shadow-md transition-shadow h-[300px]">
                       {record.images && record.images.length > 0 ? (
                         <Image
                           src={record.images[0]}

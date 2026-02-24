@@ -13,6 +13,7 @@ export default function StudentRecordDetail() {
   const id = params.id as string;
   const [record, setRecord] = useState<StudentRecord | null>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) loadRecord();
@@ -53,7 +54,7 @@ export default function StudentRecordDetail() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-sky-50 to-blue-100 pt-28 pb-20">
-      <div className="max-w-2xl mx-auto px-4">
+      <div className="max-w-[80%] mx-auto px-4">
         {/* 뒤로가기 */}
         <button
           onClick={() => router.push('/student-records')}
@@ -88,7 +89,11 @@ export default function StudentRecordDetail() {
         {record.images && record.images.length > 0 ? (
           <div className="flex flex-col gap-4">
             {record.images.map((url, idx) => (
-              <div key={idx} className="w-full relative rounded-lg overflow-hidden shadow-md bg-white">
+              <div
+                key={idx}
+                className="w-full relative rounded-lg overflow-hidden shadow-md bg-white cursor-zoom-in"
+                onClick={() => setSelectedImage(url)}
+              >
                 <Image
                   src={url}
                   alt={`${record.title} - 이미지 ${idx + 1}`}
@@ -106,6 +111,23 @@ export default function StudentRecordDetail() {
           </div>
         )}
       </div>
+
+      {/* 라이트박스 모달 */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center"
+          onClick={() => setSelectedImage(null)}
+        >
+          <div className="relative w-full h-full p-4">
+            <Image
+              src={selectedImage}
+              alt="확대 이미지"
+              fill
+              className="object-contain"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

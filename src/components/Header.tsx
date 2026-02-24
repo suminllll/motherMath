@@ -14,7 +14,7 @@ const Header = () => {
     { name: '상담예약', href: '/consultation', icon: '' },
     { name: '강의영상', href: '/lectures', icon: '' },
     { name: '교육칼럼', href: '/materials', icon: '' },
-    { name: '학생변화기록', href: '/student-records', icon: '' },
+    { name: '학생변화기록', href: '/student-records', icon: '', highlight: true },
   ];
 
   const toggleMobileMenu = () => {
@@ -43,9 +43,11 @@ const Header = () => {
                 key={item.href}
                 href={item.href}
                 className={`px-3 py-2 text-m font-medium transition-colors ${
-                  pathname === item.href
-                    ? 'text-[#52a9ff]'
-                    : 'text-white hover:text-[#52a9ff]'
+                  item.highlight
+                    ? 'bg-[#52a9ff] text-white rounded-xl hover:bg-[#3a8fe0]'
+                    : pathname === item.href
+                      ? 'text-[#52a9ff]'
+                      : 'text-white hover:text-[#52a9ff]'
                 }`}
               >
                 {item.name}
@@ -92,9 +94,11 @@ const Header = () => {
                   href={item.href}
                   onClick={closeMobileMenu}
                   className={`px-6 py-4 text-lg font-medium transition-colors border-b border-slate-700 ${
-                    pathname === item.href
-                      ? 'text-[#52a9ff] bg-slate-700'
-                      : 'text-white hover:text-[#52a9ff] hover:bg-slate-700'
+                    item.highlight
+                      ? 'bg-[#52a9ff] text-white hover:bg-[#3a8fe0]'
+                      : pathname === item.href
+                        ? 'text-[#52a9ff] bg-slate-700'
+                        : 'text-white hover:text-[#52a9ff] hover:bg-slate-700'
                   }`}
                 >
                   {item.name}
