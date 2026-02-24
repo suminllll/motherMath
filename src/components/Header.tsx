@@ -93,12 +93,12 @@ const Header = () => {
                   key={item.href}
                   href={item.href}
                   onClick={closeMobileMenu}
-                  className={`px-6 py-4 text-lg font-medium transition-colors border-b border-slate-700 ${
+                  className={`text-lg font-medium transition-colors border-b border-slate-700 ${
                     item.highlight
-                      ? 'bg-[#52a9ff] text-white hover:bg-[#3a8fe0]'
+                      ? 'bg-[#52a9ff] text-white rounded-xl w-[47%] m-3 px-2 py-2'
                       : pathname === item.href
-                        ? 'text-[#52a9ff] bg-slate-700'
-                        : 'text-white hover:text-[#52a9ff] hover:bg-slate-700'
+                        ? 'text-[#52a9ff] bg-slate-700 px-6 py-4 '
+                        : 'text-white hover:text-[#52a9ff] hover:bg-slate-700 px-6 py-4 '
                   }`}
                 >
                   {item.name}
