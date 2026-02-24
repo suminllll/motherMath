@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { getStudentRecordById } from '@/lib/student-records';
 import { getGradeLabel } from '@/lib/categories';
 import type { StudentRecord } from '@/types/database';
+import ImageLightbox from '@/components/ImageLightbox';
 
 export default function StudentRecordDetail() {
   const params = useParams();
@@ -112,21 +113,12 @@ export default function StudentRecordDetail() {
         )}
       </div>
 
-      {/* 라이트박스 모달 */}
       {selectedImage && (
-        <div
-          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center"
-          onClick={() => setSelectedImage(null)}
-        >
-          <div className="relative w-full h-full p-4">
-            <Image
-              src={selectedImage}
-              alt="확대 이미지"
-              fill
-              className="object-contain"
-            />
-          </div>
-        </div>
+        <ImageLightbox
+          src={selectedImage}
+          alt="확대 이미지"
+          onClose={() => setSelectedImage(null)}
+        />
       )}
     </div>
   );
