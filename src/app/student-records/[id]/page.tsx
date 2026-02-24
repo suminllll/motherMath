@@ -55,7 +55,7 @@ export default function StudentRecordDetail() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-sky-50 to-blue-100 pt-28 pb-20">
-      <div className="max-w-[95%] md:max-w-[80%] mx-auto px-4">
+      <div className="max-w-[95%] md:max-w-[60%] mx-auto px-4">
         {/* 뒤로가기 */}
         <button
           onClick={() => router.push('/student-records')}
