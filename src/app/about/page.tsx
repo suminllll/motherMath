@@ -1,10 +1,13 @@
 'use client'
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import FadeUp from "@/components/FadeUp";
+import ImageLightbox from "@/components/ImageLightbox";
 
 export default function About() {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
   useEffect(() => {
     // 페이지 로드 시 스크롤을 최상단으로 이동
     window.scrollTo(0, 0);
@@ -128,7 +131,10 @@ export default function About() {
                   { src: '/images/about/inside7.jpeg', alt: '마더수학 내부 시설 7' }
                 ].map((image, index) => (
                   <FadeUp key={index} delay={index * 0.05}>
-                    <div className="overflow-hidden rounded-lg shadow-md">
+                    <div
+                      className="overflow-hidden rounded-lg shadow-md cursor-zoom-in"
+                      onClick={() => setSelectedImage(image.src)}
+                    >
                       <Image
                         src={image.src}
                         alt={image.alt}
@@ -210,6 +216,12 @@ export default function About() {
             </section>
           </div>
       </div>
+      {selectedImage && (
+        <ImageLightbox
+          src={selectedImage}
+          onClose={() => setSelectedImage(null)}
+        />
+      )}
     </div>
   );
 }
