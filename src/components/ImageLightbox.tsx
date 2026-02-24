@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { useEffect } from 'react';
 
 interface ImageLightboxProps {
@@ -23,14 +22,13 @@ const ImageLightbox = ({ src, alt = '확대 이미지', onClose }: ImageLightbox
       className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center"
       onClick={onClose}
     >
-      <div className="relative w-full h-full p-4">
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          className="object-contain"
-        />
-      </div>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt={alt}
+        className="max-w-[90vw] max-h-[90vh] object-contain"
+        onClick={(e) => e.stopPropagation()}
+      />
     </div>
   );
 };
