@@ -1,40 +1,48 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { getStudentRecordById } from '@/lib/student-records';
 import { getGradeLabel } from '@/lib/categories';
-import type { StudentRecord } from '@/types/database';
 import ImageLightbox from '@/components/ImageLightbox';
+import { useQuery } from '@tanstack/react-query';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 export default function StudentRecordDetail() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
-  const [record, setRecord] = useState<StudentRecord | null>(null);
-  const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (id) loadRecord();
-  }, [id]);
+    const { data: record, isLoading } = useQuery({
+    queryKey: ['record', id],
+    queryFn: () => getStudentRecordById(id),
+  });
 
-  const loadRecord = async () => {
-    try {
-      const data = await getStudentRecordById(id);
-      setRecord(data);
-    } catch (error) {
-      console.error('Failed to load record:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  if (loading) {
+
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-sky-50 to-blue-100 pt-35 flex items-center justify-center">
-        <p className="text-gray-500 text-lg">불러오는 중...</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-sky-50 to-blue-100 pt-28 pb-20">
+        <div className="max-w-[95%] md:max-w-[60%] mx-auto px-4">
+          <div className="mb-8">
+            <Skeleton width={64} height={20} />
+          </div>
+          <div className="mb-8 space-y-3">
+            <Skeleton width={80} height={16} />
+            <Skeleton width="66%" height={32} />
+            <Skeleton width={128} height={12} />
+          </div>
+          <div className="flex flex-col gap-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="aspect-[4/3]">
+                <Skeleton height="100%" />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }

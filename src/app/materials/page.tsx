@@ -3,21 +3,28 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getMaterials, searchMaterials } from '@/lib/materials';
-import type { Material } from '@/types/database';
+import { useQuery } from '@tanstack/react-query';
 
 function MaterialsContent() {
-  const [materials, setMaterials] = useState<Material[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [searchType, setSearchType] = useState('title'); // 'title' or 'content'
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const searchParams = useSearchParams();
 
+
   useEffect(() => {
-    loadMaterials();
-  }, []);
+    const timer = setTimeout(() => setDebouncedSearchTerm(searchTerm), 300);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  const { data: materials = [], isLoading } = useQuery({
+    queryKey: ['materials', debouncedSearchTerm, searchType],
+    queryFn: () => debouncedSearchTerm ? searchMaterials(debouncedSearchTerm, searchType as 'title' | 'content'): getMaterials(),
+  });
+
 
   // URL 파라미터에서 ID 확인하고 해당 아코디언 열기
   useEffect(() => {
@@ -37,41 +44,7 @@ function MaterialsContent() {
     }
   }, [searchParams, materials]);
 
-  const loadMaterials = async () => {
-    try {
-      setLoading(true);
-      const data = await getMaterials();
-      setMaterials(data);
-    } catch (error) {
-      console.error('Failed to load materials:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  useEffect(() => {
-    const filterMaterials = async () => {
-      try {
-        setLoading(true);
-        let data: Material[];
-
-        if (searchTerm) {
-          data = await searchMaterials(searchTerm, searchType as 'title' | 'content');
-        } else {
-          data = await getMaterials();
-        }
-
-        setMaterials(data);
-      } catch (error) {
-        console.error('Failed to filter materials:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const debounceTimer = setTimeout(filterMaterials, 300);
-    return () => clearTimeout(debounceTimer);
-  }, [searchTerm, searchType]);
 
   // 페이지네이션 계산
   const totalPages = Math.ceil(materials.length / itemsPerPage);
@@ -123,7 +96,7 @@ function MaterialsContent() {
             <div className="flex items-center border border-gray-300 rounded-md overflow-hidden w-full md:w-80">
               <select
                 value={searchType}
-                onChange={(e) => setSearchType(e.target.value)}
+                onChange={(e) => { setSearchType(e.target.value); setCurrentPage(1); }}
                 className="px-3 py-2 border-none outline-none  text-gray-700 cursor-pointer text-sm"
               >
                 <option value="title" >제목</option>
@@ -132,7 +105,7 @@ function MaterialsContent() {
               <input
                 type="text"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
                 className="w-full text-black pl-3 py-2 border-none outline-none placeholder-gray-500 text-sm"
                 placeholder="검색어를 입력하세요"
               />
@@ -144,7 +117,7 @@ function MaterialsContent() {
             </div>
         </div>
 
-        {loading ? (
+        {isLoading ? (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">자료를 불러오는 중...</p>
           </div>
@@ -211,7 +184,7 @@ function MaterialsContent() {
               </div>
             </div>
 
-            {materials.length === 0 && !loading && (
+            {materials.length === 0 && !isLoading && (
               <div className="text-center py-12">
                 <p className="text-gray-500 text-lg">
                   검색 조건에 맞는 자료가 없습니다.

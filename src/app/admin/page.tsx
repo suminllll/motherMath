@@ -3,39 +3,42 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { loginAdmin, getAdminSession, clearAdminSession, setAdminSession } from '@/lib/auth';
-import { getMaterials} from '@/lib/materials';
+import { getMaterials } from '@/lib/materials';
 import { getLectures } from '@/lib/lectures';
 import { getStudentRecords } from '@/lib/student-records';
+import { useQuery } from '@tanstack/react-query';
 
 export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const [admin, setAdmin] = useState<{ username: string; name: string } | null>(null);
-const [materialCount, setMaterialCount] =useState(0)
-const [lectureCount, setLectureCount] = useState(0)
-const [studentRecordCount, setStudentRecordCount] = useState(0)
 
   useEffect(() => {
-    // 페이지 로드시 세션 확인
     const savedAdmin = getAdminSession();
     if (savedAdmin) {
       setAdmin(savedAdmin);
       setIsAuthenticated(true);
     }
-loadMaterials()
-         
-        
   }, []);
 
-   const loadMaterials = async () => {
-          const materialData = await getMaterials();
-            const lectureData = await getLectures();
-            const studentRecordData = await getStudentRecords();
-      setMaterialCount(materialData.length)
-setLectureCount(lectureData.length)
-setStudentRecordCount(studentRecordData.length)
-   }
+  const { data: materials = [] } = useQuery({
+    queryKey: ['materials'],
+    queryFn: () => getMaterials(),
+    enabled: isAuthenticated,
+  });
+
+  const { data: lectures = [] } = useQuery({
+    queryKey: ['lectures'],
+    queryFn: () => getLectures(),
+    enabled: isAuthenticated,
+  });
+
+  const { data: studentRecords = [] } = useQuery({
+    queryKey: ['records'],
+    queryFn: () => getStudentRecords(),
+    enabled: isAuthenticated,
+  });
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -138,7 +141,7 @@ setStudentRecordCount(studentRecordData.length)
               </div>
               <div className="ml-4">
                 <div className="text-sm font-medium text-gray-500">총 칼럼</div>
-                <div className="text-2xl font-bold text-gray-900">{materialCount}</div>
+                <div className="text-2xl font-bold text-gray-900">{materials.length}</div>
               </div>
             </div>
           </div>
@@ -152,7 +155,7 @@ setStudentRecordCount(studentRecordData.length)
               </div>
               <div className="ml-4">
                 <div className="text-sm font-medium text-gray-500">총 영상</div>
-                <div className="text-2xl font-bold text-gray-900">{lectureCount}</div>
+                <div className="text-2xl font-bold text-gray-900">{lectures.length}</div>
               </div>
             </div>
           </div>
@@ -166,7 +169,7 @@ setStudentRecordCount(studentRecordData.length)
               </div>
               <div className="ml-4">
                 <div className="text-sm font-medium text-gray-500">학생변화기록</div>
-                <div className="text-2xl font-bold text-gray-900">{studentRecordCount}</div>
+                <div className="text-2xl font-bold text-gray-900">{studentRecords.length}</div>
               </div>
             </div>
           </div>
