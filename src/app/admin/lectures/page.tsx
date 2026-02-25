@@ -4,10 +4,9 @@ import { useState, useEffect } from 'react';
 import { getLectures, createLecture, updateLecture, deleteLecture } from '@/lib/lectures';
 import { DEFAULT_GRADE_OPTIONS, getGradeLabel } from '@/lib/categories';
 import type { Lecture } from '@/types/database';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export default function AdminLectures() {
-  const [lectures, setLectures] = useState<Lecture[]>([]);
-  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLecture, setEditingLecture] = useState<Lecture | null>(null);
   const [formData, setFormData] = useState({
@@ -16,23 +15,47 @@ export default function AdminLectures() {
     youtube_url: '',
     grade: [] as string[]
   });
+const queryClient = useQueryClient();
 
-  useEffect(() => {
-    loadLectures();
-  }, []);
+    const { data: lectures = [], isLoading , isError} = useQuery({
+    queryKey: ['lectures'],
+    queryFn: () => getLectures(),
+  });
 
-  const loadLectures = async () => {
-    try {
-      setLoading(true);
-      const data = await getLectures();
-      setLectures(data);
-    } catch (error) {
-      console.error('Failed to load lectures:', error);
-      alert('강의 목록을 불러오는데 실패했습니다.');
-    } finally {
-      setLoading(false);
-    }
-  };
+
+const deleteMutation = useMutation({
+  mutationFn: (id: string) => deleteLecture(id),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['lectures'] });
+    alert('강의 영상이 삭제되었습니다.');
+  },
+  onError: (error) => {
+    alert(`강의 영상 삭제에 실패했습니다.\n${error instanceof Error ? error.message : '알 수 없는 오류'}`);
+  },
+});
+
+const saveMutation = useMutation({
+  mutationFn: () =>
+    editingLecture
+      ? updateLecture(editingLecture.id, formData)
+      : createLecture(formData),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['lectures'] });
+    alert(editingLecture ? '강의 영상이 수정되었습니다.' : '새 강의 영상이 추가되었습니다.');
+    closeModal();
+  },
+  onError: (error) => {
+    alert(`강의 영상 저장에 실패했습니다.\n${error instanceof Error ? error.message : '알 수 없는 오류'}`);
+  },
+});
+
+useEffect(() => {
+  if (isError) {
+    alert('강의 목록을 불러오는데 실패했습니다.');
+  }
+}, [isError]);
+
+
 
   const getYouTubeEmbedUrl = (url: string) => {
     // youtu.be/VIDEO_ID 또는 youtube.com/watch?v=VIDEO_ID 형식에서 비디오 ID 추출
@@ -43,33 +66,9 @@ export default function AdminLectures() {
     return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-
-
-    try {
-      if (editingLecture) {
-        const result = await updateLecture(editingLecture.id, formData);
-        console.log('Update result:', result);
-        alert('강의 영상이 수정되었습니다.');
-      } else {
-        const result = await createLecture(formData);
-        console.log('Create result:', result);
-        alert('새 강의 영상이 추가되었습니다.');
-      }
-
-      await loadLectures();
-      closeModal();
-    } catch (error) {
-      console.error('Failed to save lecture:', error);
-      console.error('Error details:', JSON.stringify(error, null, 2));
-      if (error instanceof Error) {
-        console.error('Error message:', error.message);
-        console.error('Error stack:', error.stack);
-      }
-      alert(`강의 영상 저장에 실패했습니다.\n${error instanceof Error ? error.message : '알 수 없는 오류'}`);
-    }
+  const handleSubmit = (e: React.FormEvent) => {
+ e.preventDefault();
+  saveMutation.mutate();
   };
 
   const handleEdit = (lecture: Lecture) => {
@@ -85,24 +84,12 @@ export default function AdminLectures() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (id: string) => {
-    if (confirm('정말로 이 강의 영상을 삭제하시겠습니까?')) {
-      try {
-        console.log('Deleting lecture with ID:', id);
-        await deleteLecture(id);
-        console.log('Delete successful');
-        await loadLectures(); // 목록 새로고침
-        alert('강의 영상이 삭제되었습니다.');
-      } catch (error) {
-        console.error('Failed to delete lecture:', error);
-        console.error('Error details:', JSON.stringify(error, null, 2));
-        if (error instanceof Error) {
-          console.error('Error message:', error.message);
-        }
-        alert(`강의 영상 삭제에 실패했습니다.\n${error instanceof Error ? error.message : '알 수 없는 오류'}`);
-      }
-    }
-  };
+
+  const handleDelete = (id: string) => {
+  if (confirm('정말로 이 강의 영상을 삭제하시겠습니까?')) {
+    deleteMutation.mutate(id);  
+  }
+};
 
   const openAddModal = () => {
     setEditingLecture(null);
@@ -141,7 +128,7 @@ export default function AdminLectures() {
           </button>
         </div>
 
-        {loading ? (
+        {isLoading ? (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">강의 목록을 불러오는 중...</p>
           </div>
@@ -202,7 +189,7 @@ export default function AdminLectures() {
               })}
             </div>
 
-            {lectures.length === 0 && !loading && (
+            {lectures.length === 0 && !isLoading && (
               <div className="text-center py-12">
                 <p className="text-gray-500 text-lg">
                   등록된 강의 영상이 없습니다.

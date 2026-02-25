@@ -12,13 +12,13 @@ import { BsFileText } from "react-icons/bs";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import { FaYoutube, FaPhone } from "react-icons/fa";
 import { SiNaver } from "react-icons/si";
-import { useState, useEffect, useRef } from "react";
+import { useRef } from "react";
 import { getAnnouncements } from "@/lib/materials";
 import { getLatestStudentRecords } from "@/lib/student-records";
 import { RiStickyNoteAddLine } from "react-icons/ri";
 import { LuNotebookPen } from "react-icons/lu";
-import type { Material, StudentRecord } from "@/types/database";
 import FadeUp from "@/components/FadeUp";
+import { useQuery } from "@tanstack/react-query";
 
 const reviews = [
   {
@@ -83,29 +83,19 @@ const features = [
 ];
 
 export default function Home() {
-  const [announcements, setAnnouncements] = useState<Material[]>([]);
-  const [studentRecords, setStudentRecords] = useState<StudentRecord[]>([]);
-  const [loading, setLoading] = useState(true);
   const carouselRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [announcementData, recordData] = await Promise.all([
-          getAnnouncements(3),
-          getLatestStudentRecords(8),
-        ]);
-        setAnnouncements(announcementData);
-        setStudentRecords(recordData);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const { data: announcements = [], isLoading: announcementsLoading } = useQuery({
+    queryKey: ['announcements'],
+    queryFn: () => getAnnouncements(3),
+  });
 
-    fetchData();
-  }, []);
+  const { data: studentRecords = [], isLoading: recordsLoading } = useQuery({
+    queryKey: ['studentRecords', 'latest'],
+    queryFn: () => getLatestStudentRecords(8),
+  });
+
+  const loading = announcementsLoading || recordsLoading;
 
   const scrollCarousel = (direction: 'left' | 'right') => {
     if (carouselRef.current) {
@@ -117,6 +107,7 @@ export default function Home() {
       });
     }
   };
+  
   return (
     <div className="min-h-screen bg-slate-800 w-full">
       {/* Floating Buttons */}

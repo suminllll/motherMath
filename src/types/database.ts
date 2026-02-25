@@ -74,7 +74,7 @@ export interface Database {
   }
 }
 
-// 편의용 타입 정의
+
 export type Material = Database['public']['Tables']['materials']['Row']
 export type MaterialInsert = Database['public']['Tables']['materials']['Insert']
 export type MaterialUpdate = Database['public']['Tables']['materials']['Update']

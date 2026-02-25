@@ -10,13 +10,11 @@ import {
 } from '@/lib/student-records';
 import { DEFAULT_GRADE_OPTIONS, getGradeLabel } from '@/lib/categories';
 import type { StudentRecord } from '@/types/database';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export default function AdminStudentRecords() {
-  const [records, setRecords] = useState<StudentRecord[]>([]);
-  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingRecord, setEditingRecord] = useState<StudentRecord | null>(null);
-  const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
@@ -25,56 +23,81 @@ export default function AdminStudentRecords() {
     images: [] as string[],
   });
 
-  useEffect(() => {
-    loadRecords();
-  }, []);
+    const queryClient = useQueryClient();
+  
+      const { data: records = [], isLoading , isError} = useQuery({
+    queryKey: ['records'],
+    queryFn: () => getStudentRecords()
+  });
+  
+    useEffect(() => {
+   if(isError){
+alert('목록을 불러오는데 실패했습니다.');
+   }
+  }, [isError]);
 
-  const loadRecords = async () => {
-    try {
-      setLoading(true);
-      const data = await getStudentRecords();
-      setRecords(data);
-    } catch (error) {
-      console.error('Failed to load records:', error);
-      alert('목록을 불러오는데 실패했습니다.');
-    } finally {
-      setLoading(false);
-    }
-  };
+    const saveMutation = useMutation({
+  mutationFn: () =>
+    editingRecord
+      ? updateStudentRecord(editingRecord.id, formData)
+      : createStudentRecord(formData),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['records'] });
+    alert(editingRecord ? '수정되었습니다.' : '추가되었습니다.');
+    closeModal();
+  },
+  onError: (error) => {
+    alert(`자료 저장에 실패했습니다.\n${error instanceof Error ? error.message : '알 수 없는 오류'}`);
+  },
+});
 
-  const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteStudentRecord(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['records'] });
+      alert('삭제되었습니다.');
+    },
+    onError: (error) => {
+      alert(`삭제 실패\n${error instanceof Error ? error.message : '알 수 없는 오류'}`);
+    },
+  });
+
+    const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
   const ALLOWED_EXTENSIONS = 'JPG, PNG, GIF, WEBP';
 
-  const handleImageUpload = async (files: FileList) => {
+
+  const uploadImages = async (files: FileList): Promise<string[]> => {
     const fileArray = Array.from(files);
     const invalidFiles = fileArray.filter((f) => !ALLOWED_TYPES.includes(f.type));
     if (invalidFiles.length > 0) {
       const names = invalidFiles.map((f) => f.name).join(', ');
-      alert(`지원하지 않는 파일 형식입니다: ${names}\n\n허용 형식: ${ALLOWED_EXTENSIONS}\n\n아이폰 사진(HEIC)은 설정 → 카메라 → 포맷 → 호환성 높은 항목을 선택하거나, JPEG로 변환 후 업로드해주세요.`);
-      return;
+      throw new Error(`지원하지 않는 파일 형식입니다: ${names}\n\n허용 형식: ${ALLOWED_EXTENSIONS}\n\n아이폰 사진(HEIC)은 설정 → 카메라 → 포맷 → 호환성 높은 항목을 선택하거나, JPEG로 변환 후 업로드해주세요.`);
     }
 
-    setUploading(true);
     const uploaded: string[] = [];
-    try {
-      for (const file of fileArray) {
-        const fd = new FormData();
-        fd.append('file', file);
-        const res = await fetch('/api/upload-student-records', { method: 'POST', body: fd });
-        if (!res.ok) {
-          const err = await res.json();
-          throw new Error(err.error || '업로드 실패');
-        }
-        const { url } = await res.json();
-        uploaded.push(url);
+    for (const file of fileArray) {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/upload-student-records', { method: 'POST', body: fd });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || '업로드 실패');
       }
-      setFormData((prev) => ({ ...prev, images: [...prev.images, ...uploaded] }));
-    } catch (error) {
-      alert(`이미지 업로드 실패: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
-    } finally {
-      setUploading(false);
+      const { url } = await res.json();
+      uploaded.push(url);
     }
+    return uploaded;
   };
+
+  const uploadMutation = useMutation({
+    mutationFn: uploadImages,
+    onSuccess: (uploaded) => {
+      setFormData((prev) => ({ ...prev, images: [...prev.images, ...uploaded] }));
+    },
+    onError: (error) => {
+      alert(`이미지 업로드 실패: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
+    },
+  });
 
   const removeImage = (index: number) => {
     setFormData((prev) => ({
@@ -92,26 +115,15 @@ export default function AdminStudentRecords() {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.images.length === 0) {
       alert('이미지를 최소 1장 업로드해주세요.');
       return;
     }
-    try {
-      if (editingRecord) {
-        await updateStudentRecord(editingRecord.id, formData);
-        alert('수정되었습니다.');
-      } else {
-        await createStudentRecord(formData);
-        alert('추가되었습니다.');
-      }
-      await loadRecords();
-      closeModal();
-    } catch (error) {
-      alert(`저장 실패: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
-    }
+  saveMutation.mutate()
   };
+
 
   const handleEdit = (record: StudentRecord) => {
     setEditingRecord(record);
@@ -123,15 +135,12 @@ export default function AdminStudentRecords() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (id: string) => {
+
+
+  const handleDelete = (id: string) => {
     if (!confirm('정말로 삭제하시겠습니까?')) return;
-    try {
-      await deleteStudentRecord(id);
-      await loadRecords();
-      alert('삭제되었습니다.');
-    } catch (error) {
-      alert(`삭제 실패: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
-    }
+    deleteMutation.mutate(id)
+
   };
 
   const openAddModal = () => {
@@ -159,7 +168,7 @@ export default function AdminStudentRecords() {
           </button>
         </div>
 
-        {loading ? (
+        {isLoading ? (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">목록을 불러오는 중...</p>
           </div>
@@ -219,7 +228,7 @@ export default function AdminStudentRecords() {
               ))}
             </div>
 
-            {records.length === 0 && !loading && (
+            {records.length === 0 && !isLoading && (
               <div className="text-center py-12">
                 <p className="text-gray-500 text-lg">등록된 기록이 없습니다.</p>
               </div>
@@ -279,15 +288,15 @@ export default function AdminStudentRecords() {
                     accept="image/*"
                     multiple
                     className="hidden"
-                    onChange={(e) => e.target.files && handleImageUpload(e.target.files)}
+                    onChange={(e) => e.target.files && uploadMutation.mutate(e.target.files)}
                   />
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    disabled={uploading}
+                    disabled={uploadMutation.isPending}
                     className="w-full border-2 border-dashed border-gray-300 rounded-md py-4 text-gray-500 hover:border-blue-400 hover:text-blue-500 transition-colors cursor-pointer disabled:opacity-50"
                   >
-                    {uploading ? '업로드 중...' : '+ 이미지 추가 (여러 장 선택 가능)'}
+                    {uploadMutation.isPending ? '업로드 중...' : '+ 이미지 추가 (여러 장 선택 가능)'}
                   </button>
                   <p className="text-xs text-gray-400 mt-1">
                     허용 형식: JPG, PNG, GIF, WEBP &nbsp;|&nbsp; 최대 10MB
@@ -334,7 +343,7 @@ export default function AdminStudentRecords() {
                   </button>
                   <button
                     type="submit"
-                    disabled={uploading}
+                    disabled={uploadMutation.isPending}
                     className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 cursor-pointer disabled:opacity-50"
                   >
                     {editingRecord ? '수정' : '추가'}

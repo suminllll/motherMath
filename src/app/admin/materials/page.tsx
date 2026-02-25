@@ -5,13 +5,12 @@ import dynamic from 'next/dynamic';
 import { getMaterials, createMaterial, updateMaterial, deleteMaterial } from '@/lib/materials';
 import type { Material } from '@/types/database';
 import 'react-quill-new/dist/quill.snow.css';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 // React Quill을 dynamic import로 불러오기 (SSR 방지)
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 
 export default function AdminMaterials() {
-  const [materials, setMaterials] = useState<Material[]>([]);
-  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMaterial, setEditingMaterial] = useState<Material | null>(null);
   const [formData, setFormData] = useState({
@@ -21,6 +20,40 @@ export default function AdminMaterials() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
+
+  const queryClient = useQueryClient();
+  
+      const { data: materials = [], isLoading , isError} = useQuery({
+    queryKey: ['materials'],
+    queryFn: () => getMaterials()
+  });
+  
+  const saveMutation = useMutation({
+  mutationFn: () =>
+    editingMaterial
+      ? updateMaterial(editingMaterial.id, formData)
+      : createMaterial(formData),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['materials'] });
+    alert(editingMaterial ? '자료가 수정되었습니다.' : '자료가 추가되었습니다.');
+    closeModal();
+  },
+  onError: (error) => {
+    alert(`자료 저장에 실패했습니다.\n${error instanceof Error ? error.message : '알 수 없는 오류'}`);
+  },
+});
+
+
+const deleteMutation = useMutation({
+  mutationFn: (id: string) => deleteMaterial(id),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['materials'] });
+    alert('자료가 삭제되었습니다.');
+  },
+  onError: (error) => {
+    alert(`자료 삭제에 실패했습니다.\n${error instanceof Error ? error.message : '알 수 없는 오류'}`);
+  },
+});
 
   // Quill 모듈이 로드되면 커스텀 Size 포맷 등록
   useEffect(() => {
@@ -144,41 +177,17 @@ export default function AdminMaterials() {
     }
   }, [isModalOpen]);
 
-  useEffect(() => {
-    loadMaterials();
-  }, []);
-
-  const loadMaterials = async () => {
-    try {
-      setLoading(true);
-      const data = await getMaterials();
-      setMaterials(data);
-    } catch (error) {
-      console.error('Failed to load materials:', error);
+useEffect(() =>{
+if(isError){
       alert('자료 목록을 불러오는데 실패했습니다.');
-    } finally {
-      setLoading(false);
-    }
-  };
+
+}
+},[isError])
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    try {
-      if (editingMaterial) {
-        await updateMaterial(editingMaterial.id, formData);
-        alert('자료가 수정되었습니다.');
-      } else {
-        await createMaterial(formData);
-        alert('새 자료가 추가되었습니다.');
-      }
-      
-      await loadMaterials(); // 목록 새로고침
-      closeModal();
-    } catch (error) {
-      console.error('Failed to save material:', error);
-      alert('자료 저장에 실패했습니다.');
-    }
+    saveMutation.mutate()
   };
 
   const handleEdit = (material: Material) => {
@@ -192,14 +201,7 @@ export default function AdminMaterials() {
 
   const handleDelete = async (id: string) => {
     if (confirm('정말로 이 자료를 삭제하시겠습니까?')) {
-      try {
-        await deleteMaterial(id);
-        alert('자료가 삭제되었습니다.');
-        await loadMaterials(); // 목록 새로고침
-      } catch (error) {
-        console.error('Failed to delete material:', error);
-        alert('자료 삭제에 실패했습니다.');
-      }
+      deleteMutation.mutate(id)
     }
   };
 
@@ -331,7 +333,7 @@ export default function AdminMaterials() {
           </button>
         </div>
 
-        {loading ? (
+        {isLoading ? (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">자료 목록을 불러오는 중...</p>
           </div>

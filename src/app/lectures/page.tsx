@@ -3,16 +3,26 @@
 import { useState, useEffect } from 'react';
 import { getLectures, getLecturesByGrade } from '@/lib/lectures';
 import { getActiveGradeOptions, getGradeLabel } from '@/lib/categories';
-import type { Lecture } from '@/types/database';
-import type { CategoryOption } from '@/lib/categories';
+import { useQuery } from '@tanstack/react-query';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 export default function Lectures() {
-  const [lectures, setLectures] = useState<Lecture[]>([]);
-  const [loading, setLoading] = useState(true);
   const [selectedGrade, setSelectedGrade] = useState('');
-  const [gradeOptions, setGradeOptions] = useState<CategoryOption[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
+
+  const { data: lectures = [], isLoading: lecturesLoading } = useQuery({
+    queryKey: ['lectures', selectedGrade],
+    queryFn: () => selectedGrade ? getLecturesByGrade(selectedGrade):getLectures(),
+  });
+  
+    const { data: gradeOptions = [], isLoading: gradeOptionsLoading } = useQuery({
+      queryKey: ['gradeOptions'],
+      queryFn: () => getActiveGradeOptions(),
+    });
+
+      const loading = gradeOptionsLoading || lecturesLoading;
 
   // 모바일 감지
   useEffect(() => {
@@ -28,55 +38,7 @@ export default function Lectures() {
 
   const itemsPerPage = isMobile ? 5 : 9; // 모바일: 5개, PC: 9개 (3x3 그리드)
 
-  useEffect(() => {
-    loadLectures();
-    loadFilterOptions();
-  }, []);
 
-  const loadLectures = async () => {
-    try {
-      setLoading(true);
-      const data = await getLectures();
-      setLectures(data);
-    } catch (error) {
-      console.error('Failed to load lectures:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadFilterOptions = async () => {
-    try {
-      const grades = await getActiveGradeOptions();
-      setGradeOptions(grades);
-    } catch (error) {
-      console.error('Failed to load filter options:', error);
-    }
-  };
-
-  useEffect(() => {
-    const filterLectures = async () => {
-      try {
-        setLoading(true);
-        let data: Lecture[];
-
-        if (selectedGrade) {
-          data = await getLecturesByGrade(selectedGrade);
-        } else {
-          data = await getLectures();
-        }
-
-        setLectures(data);
-        setCurrentPage(1); // 필터 변경 시 첫 페이지로 이동
-      } catch (error) {
-        console.error('Failed to filter lectures:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    filterLectures();
-  }, [selectedGrade]);
 
   // 페이지네이션 계산
   const totalPages = Math.ceil(lectures.length / itemsPerPage);
@@ -116,7 +78,10 @@ export default function Lectures() {
             <select
               id="grade"
               value={selectedGrade}
-              onChange={(e) => setSelectedGrade(e.target.value)}
+              onChange={(e) => {
+                setSelectedGrade(e.target.value)
+              setCurrentPage(1)
+            }}
               className="w-full text-[14px] text-black px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="" >전체 학년</option>
@@ -130,8 +95,17 @@ export default function Lectures() {
         </div>
 
         {loading ? (
-          <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">강의 영상을 불러오는 중...</p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: itemsPerPage }).map((_, i) => (
+              <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden">
+                <Skeleton className="aspect-video" />
+                <div className="p-4 space-y-2">
+                  <Skeleton width={64} height={16} />
+                  <Skeleton width="75%" height={20} />
+                  <Skeleton width="90%" height={14} />
+                </div>
+              </div>
+            ))}
           </div>
         ) : (
           <>
@@ -183,7 +157,7 @@ export default function Lectures() {
               </div>
             )}
 
-            {(
+            {totalPages > 1 && (
               <div className="flex justify-center mt-12">
                 <nav className="flex space-x-2">
                   <button

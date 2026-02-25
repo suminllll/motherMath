@@ -5,15 +5,24 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { getStudentRecords, getStudentRecordsByGrade } from '@/lib/student-records';
 import { DEFAULT_GRADE_OPTIONS, getGradeLabel } from '@/lib/categories';
-import type { StudentRecord } from '@/types/database';
+import { useQuery } from '@tanstack/react-query';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 export default function StudentRecords() {
   const router = useRouter();
-  const [records, setRecords] = useState<StudentRecord[]>([]);
-  const [loading, setLoading] = useState(true);
+ 
   const [selectedGrade, setSelectedGrade] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
+
+    const { data: records = [], isLoading } = useQuery({
+    queryKey: ['studentRecords',selectedGrade],
+    queryFn: () => selectedGrade ? getStudentRecordsByGrade(selectedGrade) : getStudentRecords(),
+  });
+  
+
+
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -24,39 +33,6 @@ export default function StudentRecords() {
 
   const itemsPerPage = isMobile ? 5 : 9;
 
-  useEffect(() => {
-    loadRecords();
-  }, []);
-
-  const loadRecords = async () => {
-    try {
-      setLoading(true);
-      const data = await getStudentRecords();
-      setRecords(data);
-    } catch (error) {
-      console.error('Failed to load student records:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const filterRecords = async () => {
-      try {
-        setLoading(true);
-        const data = selectedGrade
-          ? await getStudentRecordsByGrade(selectedGrade)
-          : await getStudentRecords();
-        setRecords(data);
-        setCurrentPage(1);
-      } catch (error) {
-        console.error('Failed to filter records:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    filterRecords();
-  }, [selectedGrade]);
 
   const totalPages = Math.ceil(records.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -85,7 +61,10 @@ export default function StudentRecords() {
             <select
               id="grade"
               value={selectedGrade}
-              onChange={(e) => setSelectedGrade(e.target.value)}
+              onChange={(e) => {
+  setSelectedGrade(e.target.value);
+  setCurrentPage(1);
+}}
               className="w-full text-[14px] text-black px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
             >
               <option value="">전체 학년</option>
@@ -98,9 +77,20 @@ export default function StudentRecords() {
           </div>
         </div>
 
-        {loading ? (
-          <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">불러오는 중...</p>
+        {isLoading ? (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: itemsPerPage }).map((_, i) => (
+              <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden">
+                <div className="aspect-[4/3]">
+                  <Skeleton height="100%" />
+                </div>
+                <div className="p-4 space-y-2">
+                  <Skeleton width={64} height={16} />
+                  <Skeleton width="75%" height={20} />
+                  <Skeleton width={96} height={12} />
+                </div>
+              </div>
+            ))}
           </div>
         ) : (
           <>
@@ -150,7 +140,7 @@ export default function StudentRecords() {
               ))}
             </div>
 
-            {records.length === 0 && !loading && (
+            {records.length === 0 && !isLoading && (
               <div className="text-center py-12">
                 <p className="text-gray-500 text-lg">해당 조건에 맞는 기록이 없습니다.</p>
               </div>
